@@ -2,7 +2,7 @@
 // ==UserLibrary==
 // @name        WebcallScheduler
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @description Library to provide a client-side ratelimit to webcalls
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/
