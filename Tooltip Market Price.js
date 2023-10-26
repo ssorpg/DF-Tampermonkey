@@ -5,9 +5,9 @@
 // @description Automatically fetches the current market price of hovered inventory items and displays in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
-// @require     https://greasyfork.org/scripts/478195-df-item-class/code/DF%20-%20Item%20Class.js?version=1270347
-// @require     https://greasyfork.org/scripts/478276-df-domeditor/code/DF%20-%20DOMEditor.js?version=1270354
-// @require     https://greasyfork.org/scripts/478194-df-helpers/code/DF%20-%20Helpers.js?version=1270351
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Item.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Helpers.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 

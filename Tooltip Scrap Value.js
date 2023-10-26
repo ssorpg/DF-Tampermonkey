@@ -5,8 +5,8 @@
 // @description Automatically fetches the current scrap value of hovered inventory items and displays in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
-// @require     https://greasyfork.org/scripts/478195-df-item-class/code/DF%20-%20Item%20Class.js?version=1270347
-// @require     https://greasyfork.org/scripts/478276-df-domeditor/code/DF%20-%20DOMEditor.js?version=1270354
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Item.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 

@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name        Faster Page Change
-// @version     2.4.1
+// @version     1.0
 // @description Flip between DF webpages directly
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm;*
-// @require     https://greasyfork.org/scripts/478276-df-domeditor/code/DF%20-%20DOMEditor.js?version=1270354
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
