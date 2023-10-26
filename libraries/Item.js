@@ -99,7 +99,7 @@
 			};
 
 			const marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-            this.marketData = Object.keys(Item.parseFlashReturn(marketData)).filter((entity) => marketData[entity].itemname == this.name);
+            this.marketData = Object.keys(Item.parseFlashReturn(marketData)).filter((key) => marketData[key].itemname == this.name);
 		}
 
         // Calculates and set the price average for this item
@@ -110,8 +110,8 @@
 
             let marketPriceSum = 0;
             let counter = 0;
-            for (const [key, value] in this.marketData) {
-                const { itemname, price, quantity } = value;
+            for (const [key, entity] in this.marketData) {
+                const { price, quantity } = entity;
                 const _quantity = this.stackable ? Number(quantity) : 1;
                 marketPriceSum += Number(price) / _quantity;
 
@@ -131,9 +131,9 @@
 
     Item.parseFlashReturn = function(flash) {
         const flashAsObj = {};
-        const flashAsArr = [...flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g)];
+        const flashMatches = flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g);
 
-        for (const entity of flashAsArr) {
+        for (const entity of flashMatches) {
             const [, type, num, field, value] = entity;
             flashAsObj[num] ??= {};
             flashAsObj[num][field] = value;
