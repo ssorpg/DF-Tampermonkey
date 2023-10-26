@@ -98,8 +98,9 @@
 				searchtype: "buyinglistitemname"
 			};
 
-			const marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-            this.marketData = Object.keys(Item.parseFlashReturn(marketData)).filter((key) => marketData[key].itemname == this.name);
+			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+            const parsedMarketData = Item.parseFlashReturn(rawMarketData);
+            this.marketData = Object.keys(parsedMarketData).filter((key) => parsedMarketData[key].itemname == this.name);
 		}
 
         // Calculates and set the price average for this item
