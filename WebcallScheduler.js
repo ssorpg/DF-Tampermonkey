@@ -32,7 +32,7 @@ window.ssorpg1 ??= {};
 
 			this.queue.push(webcall);
 			if (!this.scheduler) {
-				this.scheduler = setTimeout(this.dequeue, WebcallScheduler.RATE_LIMIT);
+				this.scheduler = setTimeout(this.dequeue, 0);
 			}
 		}
 
