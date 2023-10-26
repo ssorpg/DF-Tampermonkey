@@ -31,7 +31,7 @@ window.ssorpg1 ??= {};
 			}
 
 			this.queue.push(webcall);
-			if (!scheduler) {
+			if (!this.scheduler) {
 				setTimeout(this.scheduler, WebcallScheduler.RATE_LIMIT, this.dequeue);
 			}
 		}
