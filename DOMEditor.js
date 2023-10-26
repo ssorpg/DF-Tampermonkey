@@ -19,14 +19,16 @@ window.ssorpg1 ??= {};
 		return;
 	}
 
-	const DOMEditor = {
-		getMessagesTable: () => {
+	class DOMEditor {
+		getMessagesTable() {
 			return document.getElementsByName("stratoV5_TBLS_01")[0].closest("table");
-		},
-		getMainMenuBottom: () => {
+		}
+
+		getMainMenuBottom() {
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
-		},
-		createTooltipDiv: () => {
+		}
+
+		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
 			let scrapValueDiv = document.getElementById("ssorpg1_ScrapValueDiv");
 			let marketPriceDiv = document.getElementById("ssorpg1_MarketPriceDiv");
@@ -52,9 +54,10 @@ window.ssorpg1 ??= {};
 			}
 
 			return [tooltipDiv, scrapValueDiv, marketPriceDiv];
-		},
+		}
+
     	// Cells for use with `Item` class
-    	getInventoryCells: () => {
+    	getInventoryCells() {
 			const inventory = document.getElementById("inventory");
 
 			if (!inventory) {
@@ -65,5 +68,5 @@ window.ssorpg1 ??= {};
 		}
 	}
 
-	window.ssorpg1.DOMEditor = DOMEditor;
+	window.ssorpg1.DOMEditor = new DOMEditor();
 })();

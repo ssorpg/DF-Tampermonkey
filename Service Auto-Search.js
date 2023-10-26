@@ -5,11 +5,14 @@
 // @description Macro which automatically searches for service professionals of a certain level
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/WebcallScheduler.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
 (function() {
     "use strict";
+
+	const { WebcallScheduler } = window.ssorpg1;
 
     const buttonHolder = document.createElement("div");
     buttonHolder.id = "ssorpg1_EngineerAutoSearchDiv";
@@ -33,6 +36,10 @@
         document.getElementById("cat").textContent = "Services - Repair";
         document.getElementById("makeSearch").disabled = false;
 
+		WebcallScheduler.enqueue(tradeSearch);
+    });
+
+	async function tradeSearch() {
         const dataArray = {
             pagetime: window.userVars.pagetime,
             tradezone: window.userVars.DFSTATS_df_tradezone,
@@ -44,19 +51,12 @@
             search: "services"
         };
 
-		// TODO: create WebcallScheduler
-        window.webCall(
-            "trade_search",
-            dataArray,
-            (data) => {
-                data += "&services=" + dataArray.profession + "&searcheditem=" + dataArray.searchname;
-                window.flshToArr(data, "", window.listMarket);
-                window.populateInventory();
-                window.updateAllFields();
-            },
-            true
-        );
-    });
+		const data = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+		window.flshToArr(`${data}&services=${dataArray.profession}&searcheditem=${dataArray.searchname}`, "", window.listMarket);
+		window.populateInventory();
+		window.updateAllFields();
+		return true;
+	}
 
     buttonHolder.appendChild(newButton);
     document.body.appendChild(buttonHolder);

@@ -34,6 +34,7 @@
     DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousemove", setNextItemEvent));
 
     // Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
+	// Code injector
     window.loadMarket = (function() {
         const cachedFunction = window.loadMarket;
 
@@ -104,7 +105,7 @@
         }
 
         // No need to debounce if exact same item selected
-        if (DF_Item.checkSameItem(curItem, nextItem)) {
+        if (DF_Item.checkSameItem(nextItem, curItem)) {
             if (curItem.marketPriceAverage) {
                 setMarketPriceDiv(curItem);
             }
@@ -119,49 +120,30 @@
 
     function resetTimeout(item) {
         // Debounce time 200ms
-        clearTimeout(timeout);
-
-		// No need to fetch if it's not tradeable
-		if (!item.transferable) {
-			return;
+        timeout = clearTimeout(timeout);
+		if (item.transferable) {
+			timeout = setTimeout(WebcallScheduler.enqueue(async () => await tradeSearch(item)), DEBOUNCE_TIME);
 		}
-
-        timeout = setTimeout(WebcallScheduler.enqueue(async () => doTradeSearch(item)), DEBOUNCE_TIME);
     }
 
 	// Fetches an item's market data from the marketplace
-	function doTradeSearch(item) {
-		const dataArray = {
-			pagetime: window.userVars["pagetime"],
-			tradezone: window.userVars["DFSTATS_df_tradezone"],
-			searchname: item.name,
-			memID: "",
-			profession: "",
-			category: "",
-			search: "trades",
-			searchtype: "buyinglistitemname"
-		};
-
+	async function tradeSearch(item) {
 		// New curItem, drop this one
 		if (!DF_Item.checkSameItem(item, curItem)) {
 			return;
 		}
 
-		window.webCall("trade_search", dataArray, (marketData) => tradeSearchCallback(item, marketData), true);
+		await item.setMarketData();
+        item.setMarketPriceAverage();
+        setMarketPriceDiv(item);
 		return true;
 	}
 
-    async function tradeSearchCallback(item, marketData) {
-		// New curItem, drop this one
+    function setMarketPriceDiv(item) {
 		if (!DF_Item.checkSameItem(item, curItem)) {
 			return;
 		}
 
-        item.setMarketPriceAverage(marketData);
-        setMarketPriceDiv(item);
-    }
-
-    function setMarketPriceDiv(item) {
         const [tooltipDiv, scrapValueDiv, marketPriceDiv] = DOMEditor.createTooltipDiv();
         marketPriceDiv.textContent = "Est. market price: $"
             + Math.round(item.marketPriceAverage * item.quantity).toLocaleString()

@@ -23,6 +23,7 @@ window.ssorpg1 ??= {};
 		scheduler = null;
 		queue = [];
 
+		// Pass a function which contains a webcall
 		enqueue(webcall) {
 			if (!webcall) {
 				return;
@@ -34,6 +35,7 @@ window.ssorpg1 ??= {};
 			}
 		}
 
+		// Runs the next function in queue
 		async dequeue() {
 			const webcall = this.queue.shift();
 			if (!webcall) {
@@ -41,8 +43,8 @@ window.ssorpg1 ??= {};
 				return;
 			}
 
-			const res = await webcall();
-			if (!res) {
+			const calledToServer = await webcall();
+			if (!calledToServer) {
 				this.dequeue();
 				return;
 			}
@@ -51,7 +53,8 @@ window.ssorpg1 ??= {};
 		}
 	}
 
-	WebcallScheduler.RATE_LIMIT = 3000;
+	// Time to wait between webcalls
+	WebcallScheduler.RATE_LIMIT = 300;
 
 	window.ssorpg1.WebcallScheduler = new WebcallScheduler();
 })();

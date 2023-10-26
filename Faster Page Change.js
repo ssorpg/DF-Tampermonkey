@@ -6,8 +6,7 @@
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
-// @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm
-// @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm;*
+// @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm*
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==

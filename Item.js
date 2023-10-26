@@ -87,13 +87,32 @@ window.ssorpg1 ??= {};
             this.scrapValue = window.scrapValue(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
         }
 
+		async setMarketData() {
+			const dataArray = {
+				pagetime: window.userVars.pagetime,
+				tradezone: window.userVars.DFSTATS_df_tradezone,
+				searchname: this.name,
+				memID: "",
+				profession: "",
+				category: "",
+				search: "trades",
+				searchtype: "buyinglistitemname"
+			};
+
+			this.marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+		}
+
         // TODO: refactor at some point
         // Calculates and set the price average for this item
-        setMarketPriceAverage(marketData) {
+        setMarketPriceAverage() {
+			if (!this.marketData) {
+				return;
+			}
+
             // Fetch indexes of all items with the exact name
             let startIndex = -1;
             let endIndex = -1;
-            const names = [...marketData.matchAll(/_itemname=(.*?)&/g)];
+            const names = [...this.marketData.matchAll(/_itemname=(.*?)&/g)];
             for (let i = 0; i < names.length; i++) {
                 const name = names[i][1];
         
@@ -111,7 +130,7 @@ window.ssorpg1 ??= {};
 
             // Push prices to items object
             const prices = [];
-            const matchedPrices = [...marketData.matchAll(/_price=([0-9]*?)&/g)];
+            const matchedPrices = [...this.marketData.matchAll(/_price=([0-9]*?)&/g)];
             for (let i = startIndex; prices.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
                 prices.push(Number(matchedPrices[i][1]));
             }
@@ -120,7 +139,7 @@ window.ssorpg1 ??= {};
             let quantities = [];
             if (this.stackable) {
                 // Push quantites to items object
-                const matchedQuantities = [...marketData.matchAll(/_quantity=([0-9]*?)&/g)];
+                const matchedQuantities = [...this.marketData.matchAll(/_quantity=([0-9]*?)&/g)];
                 for (let i = startIndex; quantities.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
                     quantities.push(Number(matchedQuantities[i][1]));
                 }
