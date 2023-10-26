@@ -37,7 +37,7 @@ window.ssorpg1 ??= {};
 		async dequeue() {
 			const webcall = this.queue.shift();
 			if (!webcall) {
-				clearTimeout(this.scheduler);
+				this.scheduler = clearTimeout(this.scheduler);
 				return;
 			}
 
