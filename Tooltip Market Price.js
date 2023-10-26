@@ -132,6 +132,7 @@
 		}
 
 		await item.setMarketData();
+		Item.parseFlashReturn(item.marketData);
         item.setMarketPriceAverage();
         setMarketPriceDiv(item);
 		return true;

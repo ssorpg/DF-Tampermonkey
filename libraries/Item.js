@@ -160,7 +160,7 @@
         const flashAsObj = {};
         const flashAsArr = [...flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g)];
 
-        for (entity of flashAsArr) {
+        for (const entity of flashAsArr) {
             const [type, num, field, value] = entity;
             for (let i = 0; i < entity.length; i++) {
                 flashAsObj[num] ??= {};
