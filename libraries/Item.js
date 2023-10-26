@@ -112,7 +112,7 @@
 
             let marketPriceSum = 0;
             let counter = 0;
-            for (const [key, entity] in this.marketData) {
+            for (const { key, entity } in this.marketData) {
                 const { price, quantity } = entity;
                 const _quantity = this.stackable ? Number(quantity) : 1;
                 marketPriceSum += Number(price) / _quantity;
