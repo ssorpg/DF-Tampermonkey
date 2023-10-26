@@ -87,35 +87,13 @@ window.ssorpg1 ??= {};
             this.scrapValue = window.scrapValue(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
         }
 
-        // Fetches this item's market data from the marketplace
-        async tradeSearch() {
-            // No need to fetch if it's not tradeable
-            if (!this.transferable) {
-                return;
-            }
-
-            const dataArray = {
-                pagetime: window.userVars["pagetime"],
-                tradezone: window.userVars["DFSTATS_df_tradezone"],
-                searchname: this.name,
-                memID: "",
-                profession: "",
-                category: "",
-                search: "trades",
-                searchtype: "buyinglistitemname"
-            };
-
-            // TODO: create WebcallScheduler
-            this.marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-        }
-        
         // TODO: refactor at some point
         // Calculates and set the price average for this item
-        setMarketPriceAverage() {
+        setMarketPriceAverage(marketData) {
             // Fetch indexes of all items with the exact name
             let startIndex = -1;
             let endIndex = -1;
-            const names = [...this.marketData.matchAll(/_itemname=(.*?)&/g)];
+            const names = [...marketData.matchAll(/_itemname=(.*?)&/g)];
             for (let i = 0; i < names.length; i++) {
                 const name = names[i][1];
         
@@ -133,7 +111,7 @@ window.ssorpg1 ??= {};
 
             // Push prices to items object
             const prices = [];
-            const matchedPrices = [...this.marketData.matchAll(/_price=([0-9]*?)&/g)];
+            const matchedPrices = [...marketData.matchAll(/_price=([0-9]*?)&/g)];
             for (let i = startIndex; prices.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
                 prices.push(Number(matchedPrices[i][1]));
             }
@@ -142,7 +120,7 @@ window.ssorpg1 ??= {};
             let quantities = [];
             if (this.stackable) {
                 // Push quantites to items object
-                const matchedQuantities = [...this.marketData.matchAll(/_quantity=([0-9]*?)&/g)];
+                const matchedQuantities = [...marketData.matchAll(/_quantity=([0-9]*?)&/g)];
                 for (let i = startIndex; quantities.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
                     quantities.push(Number(matchedQuantities[i][1]));
                 }

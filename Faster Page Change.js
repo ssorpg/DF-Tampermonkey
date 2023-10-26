@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name        Faster Page Change
+// @grant       none
 // @version     1.0
 // @description Flip between DF webpages directly
 // @author      ssorpg1

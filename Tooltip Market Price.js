@@ -14,10 +14,10 @@
 (function() {
     "use strict";
 
-    const { DF_Item, DOMEditor, helpers } = window.ssorpg1;
+    const { DF_Item, DOMEditor, WebcallScheduler, helpers } = window.ssorpg1;
 
     const DEFAULT_CREDIT_AMOUNT = 100;
-    const DEBOUNCE_TIME = 500;
+    const DEBOUNCE_TIME = 200;
 
     let timeout = null;
 
@@ -61,30 +61,32 @@
 
     // TODO: convert to code injector
     const gcDiv = document.getElementById("gamecontent");
-    const gcObserver = new MutationObserver((mutationList, observer) => {
-        if (window.marketScreen !== "sell") {
-            return;
-        }
+	if (gcDiv) {
+		const gcObserver = new MutationObserver((mutationList, observer) => {
+			if (window.marketScreen !== "sell") {
+				return;
+			}
 
-        if (!curItem || !curItem.marketPriceAverage) {
-            return;
-        }
+			if (!curItem || !curItem.marketPriceAverage) {
+				return;
+			}
 
-        const moneyField = document.getElementsByClassName("moneyField");
-        if (moneyField.length == 0) {
-            return;
-        }
+			const moneyField = document.getElementsByClassName("moneyField");
+			if (moneyField.length == 0) {
+				return;
+			}
 
-        // Price field
-        const quantity = curItem.type == "credits" ? DEFAULT_CREDIT_AMOUNT : curItem.quantity;
-        moneyField[0].value = Math.round(curItem.marketPriceAverage * quantity);
+			// Price field
+			const quantity = curItem.type == "credits" ? DEFAULT_CREDIT_AMOUNT : curItem.quantity;
+			moneyField[0].value = Math.round(curItem.marketPriceAverage * quantity);
 
-        // `Yes` button
-        gcDiv.children[2].disabled = false;
-    });
+			// `Yes` button
+			gcDiv.children[2].disabled = false;
+		});
 
-    // Waits for child additions or removals and calls the above function
-    gcObserver.observe(gcDiv, { childList: true });
+		// Waits for child additions or removals and calls the above function
+		gcObserver.observe(gcDiv, { childList: true });
+	}
 
     function setNextItem(inventoryCell) {
         // Item in the inv slot we moused over
@@ -111,24 +113,50 @@
         curItem = nextItem;
         nextItem = null;
 
-        resetTimeout();
+        resetTimeout(curItem);
     }
 
-    function resetTimeout() {
-        // Debounce time 500ms
+    function resetTimeout(item) {
+        // Debounce time 200ms
         clearTimeout(timeout);
-        timeout = setTimeout(() => waitForTradeSearch(curItem), DEBOUNCE_TIME);
+
+		// No need to fetch if it's not tradeable
+		if (!item.transferable) {
+			return;
+		}
+
+        timeout = setTimeout(WebcallScheduler.enqueue(async () => doTradeSearch(item)), DEBOUNCE_TIME);
     }
 
-    async function waitForTradeSearch(item) {
-        await item.tradeSearch();
+	// Fetches an item's market data from the marketplace
+	function doTradeSearch(item) {
+		const dataArray = {
+			pagetime: window.userVars["pagetime"],
+			tradezone: window.userVars["DFSTATS_df_tradezone"],
+			searchname: this.name,
+			memID: "",
+			profession: "",
+			category: "",
+			search: "trades",
+			searchtype: "buyinglistitemname"
+		};
 
-        // New curItem, drop this one
-        if (!DF_Item.checkSameItem(item, curItem)) {
-            return;
-        }
+		// New curItem, drop this one
+		if (!DF_Item.checkSameItem(item, curItem)) {
+			return;
+		}
 
-        item.setMarketPriceAverage();
+		window.webCall("trade_search", dataArray, (marketData) => tradeSearchCallback(item, marketData), true);
+		return true;
+	}
+
+    async function tradeSearchCallback(item, marketData) {
+		// New curItem, drop this one
+		if (!DF_Item.checkSameItem(item, curItem)) {
+			return;
+		}
+
+        item.setMarketPriceAverage(marketData);
         setMarketPriceDiv(item);
     }
 

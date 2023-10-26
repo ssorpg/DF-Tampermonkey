@@ -34,8 +34,8 @@
         document.getElementById("makeSearch").disabled = false;
 
         const dataArray = {
-            pagetime: window.userVars["pagetime"],
-            tradezone: window.userVars["DFSTATS_df_tradezone"],
+            pagetime: window.userVars.pagetime,
+            tradezone: window.userVars.DFSTATS_df_tradezone,
             searchname: "75",
             memID: "",
             searchtype: "buyinglist",
@@ -43,12 +43,13 @@
             category: "",
             search: "services"
         };
-        
+
+		// TODO: create WebcallScheduler
         window.webCall(
             "trade_search",
             dataArray,
             (data) => {
-                data += "&services=" + dataArray["profession"] + "&searcheditem=" + dataArray["searchname"];
+                data += "&services=" + dataArray.profession + "&searcheditem=" + dataArray.searchname;
                 window.flshToArr(data, "", window.listMarket);
                 window.populateInventory();
                 window.updateAllFields();
