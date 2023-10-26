@@ -5,6 +5,7 @@
 // @description Automatically fetches the current market price of hovered inventory items and displays in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
+// @match       https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Item.js
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/WebcallScheduler.js
@@ -18,9 +19,6 @@
     const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
     const DEFAULT_CREDIT_AMOUNT = 100;
-    const DEBOUNCE_TIME = 200;
-
-    let timeout = null;
 
     let curItem = null;
     let nextItem = null;
@@ -115,15 +113,11 @@
         curItem = nextItem;
         nextItem = null;
 
-        resetTimeout(curItem);
-    }
-
-    function resetTimeout(item) {
-        // Debounce time 200ms
-        timeout = clearTimeout(timeout);
-		if (item.transferable) {
-			timeout = setTimeout(WebcallScheduler.enqueue(async () => await tradeSearch(item)), DEBOUNCE_TIME);
+		if (!curItem.transferable) {
+			return;
 		}
+
+		WebcallScheduler.enqueue(async () => await tradeSearch(curItem));
     }
 
 	// Fetches an item's market data from the marketplace

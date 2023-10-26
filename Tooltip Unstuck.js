@@ -11,8 +11,7 @@
 (function() {
     "use strict";
 
-	const inventory = document.getElementById("inventory");
-
+	const inventory = document.getElementById("inventoryholder");
 	if (!inventory) {
 		return;
 	}
