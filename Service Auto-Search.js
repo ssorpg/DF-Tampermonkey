@@ -2,7 +2,7 @@
 // @name        Service Auto-Search
 // @grant       none
 // @version     1.0
-// @description Macro which automatically searches for service professionals of a certain level
+// @description Automatically searches for service professionals of a certain level
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/WebcallScheduler.js

@@ -2,7 +2,7 @@
 // @name        Faster Page Change
 // @grant       none
 // @version     1.0
-// @description Flip between DF webpages directly
+// @description Flip between DF webpages quickly
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*

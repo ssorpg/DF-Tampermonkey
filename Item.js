@@ -10,12 +10,11 @@
 // ==/UserLibrary==
 // ==/UserScript==
 
-window.ssorpg1 ??= {};
-
 (function() {
     "use strict";
 
-    if (window.ssorpg1.DF_Item) {
+	window.ssorpg1 ??= {};
+    if (window.ssorpg1.Item) {
         return;
     }
 
@@ -164,5 +163,5 @@ window.ssorpg1 ??= {};
         return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
     }
 
-    window.ssorpg1.DF_Item = Item;
+    window.ssorpg1.Item = Item;
 })();

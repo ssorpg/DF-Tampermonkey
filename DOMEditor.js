@@ -3,18 +3,17 @@
 // @name        DOMEditor
 // @grant       none
 // @version     1.0
-// @description Library to provide DOM selectors for difficult-to-select elements, as well as elements shared between scripts
+// @description Library to provide DOM selectors for difficult-to-select elements as well as elements shared between scripts
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserLibrary==
 // ==/UserScript==
 
-window.ssorpg1 ??= {};
-
 (function() {
 	"use strict";
 
+	window.ssorpg1 ??= {};
 	if (window.ssorpg1.DOMEditor) {
 		return;
 	}

@@ -10,11 +10,10 @@
 // ==/UserLibrary==
 // ==/UserScript==
 
-window.ssorpg1 ??= {};
-
 (function() {
 	"use strict";
 
+	window.ssorpg1 ??= {};
 	if (window.ssorpg1.WebcallScheduler) {
 		return;
 	}

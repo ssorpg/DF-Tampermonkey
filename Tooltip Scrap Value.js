@@ -13,7 +13,7 @@
 (function() {
     "use strict";
 
-    const { DF_Item, DOMEditor } = window.ssorpg1;
+    const { Item, DOMEditor } = window.ssorpg1;
 
     // TODO: convert to code injector
     DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousemove", setScrapValueDivEvent));
@@ -27,7 +27,7 @@
     }
 
     function setScrapValueDiv(inventoryCell) {
-        const item = inventoryCell.firstChild ? new DF_Item(inventoryCell.firstChild) : null;
+        const item = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
 
         if (!item) {
             return;

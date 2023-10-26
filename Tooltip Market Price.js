@@ -15,7 +15,7 @@
 (function() {
     "use strict";
 
-    const { DF_Item, DOMEditor, WebcallScheduler, helpers } = window.ssorpg1;
+    const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
     const DEFAULT_CREDIT_AMOUNT = 100;
     const DEBOUNCE_TIME = 200;
@@ -92,7 +92,7 @@
 
     function setNextItem(inventoryCell) {
         // Item in the inv slot we moused over
-        nextItem = inventoryCell.firstChild ? new DF_Item(inventoryCell.firstChild) : null;
+        nextItem = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
@@ -105,7 +105,7 @@
         }
 
         // No need to debounce if exact same item selected
-        if (DF_Item.checkSameItem(nextItem, curItem)) {
+        if (Item.checkSameItem(nextItem, curItem)) {
             if (curItem.marketPriceAverage) {
                 setMarketPriceDiv(curItem);
             }
@@ -129,7 +129,7 @@
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
 		// New curItem, drop this one
-		if (!DF_Item.checkSameItem(item, curItem)) {
+		if (!Item.checkSameItem(item, curItem)) {
 			return;
 		}
 
@@ -140,13 +140,13 @@
 	}
 
     function setMarketPriceDiv(item) {
-		if (!DF_Item.checkSameItem(item, curItem)) {
+		if (!Item.checkSameItem(item, curItem)) {
 			return;
 		}
 
         const [tooltipDiv, scrapValueDiv, marketPriceDiv] = DOMEditor.createTooltipDiv();
         marketPriceDiv.textContent = "Est. market price: $"
             + Math.round(item.marketPriceAverage * item.quantity).toLocaleString()
-            + (item.quantity > 1 ? `\r\n($${helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+            + (item.quantity > 1 ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
     }
 })();
