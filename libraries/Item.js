@@ -99,7 +99,9 @@
 			};
 
 			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-            this.marketData = Object.entries(Item.parseFlashReturn(rawMarketData)).filter(([key, entity]) => entity.itemname == this.name);
+            const parsedMarketData = Item.parseFlashReturn(rawMarketData);
+            const filteredMarketData = Object.entries(parsedMarketData).filter(([key, entity]) => entity.itemname == this.name);
+            this.marketData = Object.fromEntries(filteredMarketData);
 		}
 
         // Calculates and set the price average for this item
