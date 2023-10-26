@@ -32,7 +32,7 @@ window.ssorpg1 ??= {};
 
 			this.queue.push(webcall);
 			if (!this.scheduler) {
-				setTimeout(this.scheduler, WebcallScheduler.RATE_LIMIT, this.dequeue);
+				this.scheduler = setTimeout(this.dequeue, WebcallScheduler.RATE_LIMIT);
 			}
 		}
 
@@ -50,7 +50,7 @@ window.ssorpg1 ??= {};
 				return;
 			}
 
-			setTimeout(this.scheduler, WebcallScheduler.RATE_LIMIT, this.dequeue);
+			this.scheduler = setTimeout(this.dequeue, WebcallScheduler.RATE_LIMIT);
 		}
 	}
 
