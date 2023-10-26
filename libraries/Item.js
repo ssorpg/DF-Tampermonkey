@@ -98,61 +98,34 @@
 				searchtype: "buyinglistitemname"
 			};
 
-			this.marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+			const marketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+            this.marketData = Object.keys(Item.parseFlashReturn(marketData)).filter((entity) => marketData[entity].itemname == this.name);
 		}
 
-        // TODO: refactor at some point
         // Calculates and set the price average for this item
         setMarketPriceAverage() {
 			if (!this.marketData) {
 				return;
 			}
 
-            // Fetch indexes of all items with the exact name
-            let startIndex = -1;
-            let endIndex = -1;
-            const names = [...this.marketData.matchAll(/_itemname=(.*?)&/g)];
-            for (let i = 0; i < names.length; i++) {
-                const name = names[i][1];
-        
-                // We reached the first item with the exact name
-                if (startIndex == -1 && name == this.name) {
-                    startIndex = i;
-                }
-        
-                // We reached the last item with the exact name
-                if (startIndex != -1 && (name != this.name || i == names.length - 1)) {
-                    endIndex = i;
+            let marketPriceSum = 0;
+            let counter = 0;
+            for (const [key, value] in this.marketData) {
+                const { itemname, price, quantity } = value;
+                const _quantity = this.stackable ? Number(quantity) : 1;
+                marketPriceSum += Number(price) / _quantity;
+
+                counter++;
+                if (counter >= Item.MAX_PRICES_TO_AVERAGE) {
                     break;
                 }
             }
 
-            // Push prices to items object
-            const prices = [];
-            const matchedPrices = [...this.marketData.matchAll(/_price=([0-9]*?)&/g)];
-            for (let i = startIndex; prices.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
-                prices.push(Number(matchedPrices[i][1]));
+            if (counter == 0) {
+                return;
             }
 
-            // If it can have quantity > 1
-            let quantities = [];
-            if (this.stackable) {
-                // Push quantites to items object
-                const matchedQuantities = [...this.marketData.matchAll(/_quantity=([0-9]*?)&/g)];
-                for (let i = startIndex; quantities.length < Item.MAX_PRICES_TO_AVERAGE && i < endIndex; i++) {
-                    quantities.push(Number(matchedQuantities[i][1]));
-                }
-            }
-            else {
-                quantities = (new Array(Item.MAX_PRICES_TO_AVERAGE)).fill(1);
-            }
-
-            let marketPriceSum = 0;
-            for (let i = 0; i < prices.length && i < quantities.length; i++) {
-                marketPriceSum += prices[i] / quantities[i];
-            }
-        
-            this.marketPriceAverage = marketPriceSum / prices.length;
+            this.marketPriceAverage = marketPriceSum / counter;
         }
     }
 
