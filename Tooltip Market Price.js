@@ -134,7 +134,7 @@
 		const dataArray = {
 			pagetime: window.userVars["pagetime"],
 			tradezone: window.userVars["DFSTATS_df_tradezone"],
-			searchname: this.name,
+			searchname: item.name,
 			memID: "",
 			profession: "",
 			category: "",
