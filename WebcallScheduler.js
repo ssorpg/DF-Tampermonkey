@@ -51,7 +51,7 @@ window.ssorpg1 ??= {};
 		}
 	}
 
-	WebcallScheduler.RATE_LIMIT = 300;
+	WebcallScheduler.RATE_LIMIT = 3000;
 
 	window.ssorpg1.WebcallScheduler = new WebcallScheduler();
 })();
