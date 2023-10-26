@@ -162,10 +162,8 @@
 
         for (const entity of flashAsArr) {
             const [, type, num, field, value] = entity;
-            for (let i = 0; i < entity.length; i++) {
-                flashAsObj[num] ??= {};
-                flashAsObj[num][field] = value;
-            }
+            flashAsObj[num] ??= {};
+            flashAsObj[num][field] = value;
         }
 
         return flashAsObj;
