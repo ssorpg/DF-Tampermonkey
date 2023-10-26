@@ -113,12 +113,16 @@
         curItem = nextItem;
         nextItem = null;
 
-		if (!curItem.transferable) {
+		enqueue(curItem);
+    }
+
+	function enqueue(item) {
+		if (!item.transferable) {
 			return;
 		}
 
-		WebcallScheduler.enqueue(async () => await tradeSearch(curItem));
-    }
+		WebcallScheduler.enqueue(async () => await tradeSearch(item));
+	}
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
