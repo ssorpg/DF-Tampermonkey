@@ -9,7 +9,7 @@
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Helpers.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
