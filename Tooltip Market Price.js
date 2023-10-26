@@ -6,9 +6,9 @@
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Item.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/WebcallScheduler.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/Helpers.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==

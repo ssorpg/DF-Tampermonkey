@@ -156,12 +156,28 @@
         }
     }
 
-    Item.INVALID_WORDS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
-    Item.MAX_PRICES_TO_AVERAGE = 5;
+    Item.parseFlashReturn = function(flash) {
+        const flashAsObj = {};
+        const flashAsArr = [...flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g)];
+
+        for (entity of flashAsArr) {
+            const [type, num, field, value] = entity;
+            for (let i = 0; i < entity.length; i++) {
+                flashAsObj[num] ??= {};
+                flashAsObj[num][field] = value;
+            }
+        }
+
+        debugger;
+        return flashAsObj;
+    }
 
     Item.checkSameItem = function(item1, item2) {
         return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
     }
+
+    Item.INVALID_WORDS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
+    Item.MAX_PRICES_TO_AVERAGE = 5;
 
     window.ssorpg1.Item = Item;
 })();
