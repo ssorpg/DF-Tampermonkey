@@ -79,11 +79,11 @@
 		getCraftingTooltip() {
 			return document.getElementById("infoBox").lastChild;
 		}
-	}
 
-	DOMEditor.removeAllChildNodes = function(parent) {
-		while (parent.firstChild) {
-			parent.removeChild(parent.firstChild);
+		removeAllChildNodes(parent) {
+			while (parent.firstChild) {
+				parent.removeChild(parent.firstChild);
+			}
 		}
 	}
 
