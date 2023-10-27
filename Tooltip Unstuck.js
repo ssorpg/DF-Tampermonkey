@@ -2,7 +2,7 @@
 // @name         Tooltip Unstuck
 // @grant        none
 // @version      1.0
-// @description  Fixes the tooltip becomes stuck on the screen
+// @description  Fixes the tooltip becoming stuck on the screen
 // @author       Ssorpg1
 // @match        https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @namespace    https://greasyfork.org/users/279200
