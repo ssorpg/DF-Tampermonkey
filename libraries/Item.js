@@ -146,7 +146,7 @@
 
     Item.parseFlashReturn = function(flash) {
         const flashAsObj = {};
-        const flashMatches = flash.matchAll(/([a-z]*[_a-z]+)_*([0-9]*)_(.*?)=(.*?)(?:&|$)/gi);
+        const flashMatches = flash.matchAll(/([a-z]*[_a-z]+)_*([0-9]*)_(.*?)=(.*?)(?:&|$|\s)/gi);
 
         for (const entity of flashMatches) {
             const [match, type, num, field, value] = entity;
