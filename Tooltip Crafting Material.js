@@ -18,8 +18,8 @@
     const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
 	const storage = {};
-	WebcallScheduler.enqueue(getStorage);
 
+	WebcallScheduler.enqueue(getStorage);
 	async function getStorage() {
 		const callData = {
 			pagetime: window.userVars.pagetime,
@@ -28,9 +28,11 @@
 			password: window.userVars.password
 		};
 	
+		// Get and convert the storage data to an object
 		const storageData = await new Promise((resolve) => window.webCall("get_storage", callData, resolve, true));
 		const parsedStorageData = Item.parseFlashReturn(storageData);
 
+		// Count how many of each item we have in storage
 		for (const [key, value] of Object.entries(parsedStorageData)) {
 			const { type, quantity } = value;
 			if (!storage[type]) {
@@ -40,17 +42,31 @@
 			storage[type].quantity += Number(quantity);
 		}
 
-		// TODO: convert to code injector
-		DOMEditor.getCraftingTableCells().forEach((cell) => cell.addEventListener("mousemove", getCraftingMaterialsEvent));
+		const newEventListenerParams = {
+			element: document.getElementById("inventoryholder"),
+			event: "mousemove",
+			oldFunctionName: "infoCard",
+			newFunction: getCraftingMaterialsEvent,
+			prepend: false,
+			append: true
+		}
+
+		DOMEditor.replaceEventListener(newEventListenerParams);
 		return true;
 	}
 
 	function getCraftingMaterialsEvent() {
-		setTimeout(getCraftingMaterials, 0);
+		if (!window.curInfoItem) {
+			return;
+		}
+		
+		if (window.curInfoItem.classList.contains("fakeItem") && window.curInfoItem.parentNode.id === "recipes") {
+			getCraftingMaterials();
+		}
 	}
 
 	function getCraftingMaterials() {
-		// TODO: color differently based on whether user has enough of item?
+		// Fetches from the tooltip itself
 		const craftingMaterialMatches = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
 
@@ -59,6 +75,7 @@
 			return;
 		}
 
+		// TODO: color differently based on whether user has enough of item?
 		const { storedItemsDiv } = DOMEditor.createTooltipDiv();
 		DOMEditor.removeAllChildNodes(storedItemsDiv);
 

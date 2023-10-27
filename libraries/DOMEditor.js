@@ -85,6 +85,33 @@
 				parent.removeChild(parent.firstChild);
 			}
 		}
+
+		// Appends or prepends a new function to run
+		replaceEventListener(newEventListenerParams) {
+			const { element, event, oldFunctionName } = newEventListenerParams;
+
+			element.removeEventListener(event, window[oldFunctionName]);
+			this.replaceFunction(newEventListenerParams);
+			element.addEventListener(event, window[oldFunctionName]);
+		}
+
+		// Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
+		replaceFunction(newFunctionParams) {
+			const { oldFunctionName, newFunction, prepend, append } = newFunctionParams;
+
+			const cachedFunction = window[oldFunctionName];
+			// Set back to the same `window[functionName]` so that further functions can be injected
+			window[oldFunctionName] = function() {
+				if (prepend) {
+					newFunction(arguments);
+				}
+				const result = cachedFunction.apply(this, arguments);
+				if (append) {
+					newFunction(arguments);
+				}
+				return result;
+			};
+		}
 	}
 
 	window.ssorpg1.DOMEditor = new DOMEditor();

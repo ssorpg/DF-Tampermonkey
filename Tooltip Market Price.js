@@ -28,35 +28,30 @@
     document.addEventListener("mousedown", (e) => enabled = false);
     document.addEventListener("mouseup", (e) => enabled = true);
 
-    // TODO: convert to code injector
-    DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousemove", setNextItemEvent));
-
-    // Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
-	// Code injector
-    window.loadMarket = (function() {
-        const cachedFunction = window.loadMarket;
-
-        return function() {
-            const result = cachedFunction.apply(this, arguments);
-
-            if (window.marketScreen === "sell") {
-                document.getElementById("creditSlot").addEventListener("mousemove", setNextItemEvent);
-            }
-
-            return result;
-        };
-    })();
+    const newEventListenerParams = {
+        element: document.getElementById("inventoryholder"),
+        event: "mousemove",
+        oldFunctionName: "infoCard",
+        newFunction: setNextItemEvent,
+        prepend: false,
+        append: true
+    }
 
     function setNextItemEvent(e) {
         if (!enabled) {
             return;
         }
 
-        // `currentTarget` is lost after a timeout
-        const inventoryCell = e.currentTarget;
+        if (!window.curInfoItem) {
+            return;
+        }
 
-        // Push to end of event queue so that window variables are up-to-date
-        setTimeout(setNextItem, 0, inventoryCell);
+        console.log(window.curInfoItem);
+        return;
+
+        if (window.marketScreen === "sell") {
+            setNextItem(window.curInfoItem);
+        }
     }
 
     // TODO: convert to code injector
@@ -113,16 +108,14 @@
         curItem = nextItem;
         nextItem = null;
 
-		enqueue(curItem);
-    }
-
-	function enqueue(item) {
-		if (!item.transferable) {
+		if (!curItem.transferable) {
 			return;
 		}
 
+        // Save it so we don't lose it on callback
+        const item = curItem;
 		WebcallScheduler.enqueue(async () => await tradeSearch(item));
-	}
+    }
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
