@@ -44,5 +44,6 @@
 
 	function getCraftingMaterials() {
 		const craftingMaterials = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
+		// TODO: compare names between craftingMaterials and items in storage then print how many of that item we have
 	}
 })();
