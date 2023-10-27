@@ -107,7 +107,7 @@
 			};
 		}
 
-		// Corrects the location of the infoBOx when new information is appended
+		// Corrects the location of the infoBox when new information is appended
 		infoBoxCorrection() {
 			const { inventoryHolder, mousePos, infoBox } = window;
 			const invHoldOffsets = inventoryHolder.getBoundingClientRect();
