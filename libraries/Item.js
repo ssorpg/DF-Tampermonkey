@@ -25,8 +25,9 @@
         itemQuantity = null;
 
         type = null;
-        name = null;
         color = null;
+        name = null;
+        category = null;
         stackable = false;
         quantity = null;
         transferable = true;
@@ -50,8 +51,9 @@
             this._setItemData();
             this._setItemQuantity();
 
-            this._setNameAndColor();
             this._setType();
+            this._setColorAndName();
+            this._setCategory();
             this._setStackable();
             this._setQuantity();
             this._setTransferable();
@@ -66,9 +68,13 @@
             this.itemQuantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
         }
 
+        _setType() {
+            this.type = this.itemElement ? this.itemElement.dataset.type : this.itemSelector;
+        }
+
         // Seperates clothing colors from item name
-        _setNameAndColor() {
-            const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
+        _setColorAndName() {
+            const nameAsArr = window.itemNamer(this.type, this.itemQuantity).split(" ");
             for (const word of Item.INVALID_WORDS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
@@ -79,12 +85,12 @@
             this.name = nameAsArr.join(" ");
         }
 
-        _setType() {
-            this.type = this.itemData.itemcat;
+        _setCategory() {
+            this.category = this.itemData.itemcat;
         }
 
         _setStackable() {
-            this.stackable = this.type == "ammo" || this.type == "credits";
+            this.stackable = this.category == "ammo" || this.category == "credits";
         }
 
         _setQuantity() {
@@ -96,7 +102,7 @@
         }
 
         _setScrapValue() {
-            this.scrapValue = window.scrapValue(this.itemSelector, this.itemQuantity);
+            this.scrapValue = window.scrapValue(this.type, this.itemQuantity);
         }
 
 		async setMarketData() {
