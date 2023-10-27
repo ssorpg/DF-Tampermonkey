@@ -33,7 +33,10 @@
 
 		for (const [key, entity] of Object.entries(parsedStorageData)) {
 			const { type, quantity } = entity;
-			storage[type] ??= new Item(type);
+			if (!storage[type]) {
+				storage[type] = new Item(type);
+				storage[type].quantity = 0;
+			}
 			storage[type].quantity += Number(quantity);
 		}
 
@@ -44,6 +47,6 @@
 
 	function getCraftingMaterials() {
 		const craftingMaterials = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
-		// TODO: compare names between craftingMaterials and items in storage then print how many of that item we have
+		// TODO: compare names between craftingMaterials and items in storage, then display how many of that item we have
 	}
 })();
