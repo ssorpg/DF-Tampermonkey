@@ -155,9 +155,9 @@
         const flashMatches = flash.trim().matchAll(/([a-z]*_*[a-z]+)_*([0-9]+)_(.*?)=(.*?)(?:&|$)/gi);
 
         for (const value of flashMatches) {
-            const [match, type, num, field, value] = value;
+            const [match, type, num, itemData, itemValue] = value;
             flashAsObj[num] ??= {};
-            flashAsObj[num][field] = value;
+            flashAsObj[num][itemData] = itemValue;
         }
 
         return flashAsObj;
