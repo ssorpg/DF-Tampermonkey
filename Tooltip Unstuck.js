@@ -8,7 +8,7 @@
 // @namespace    https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
 	const inventory = document.getElementById("inventoryholder");
@@ -18,4 +18,4 @@ window.addEventListener("load", (function() {
 
 	// TODO: convert to code injector
 	inventory.addEventListener("mouseout", () => document.getElementById("infoBox").style.visibility = "hidden");
-}))
+})();

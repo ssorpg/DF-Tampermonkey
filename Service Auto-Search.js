@@ -9,7 +9,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
 	const { WebcallScheduler } = window.ssorpg1;
@@ -60,4 +60,4 @@ window.addEventListener("load", (function() {
 
     buttonHolder.appendChild(newButton);
     document.body.appendChild(buttonHolder);
-}));
+})();

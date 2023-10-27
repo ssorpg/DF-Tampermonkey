@@ -13,7 +13,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
     const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
@@ -147,4 +147,4 @@ window.addEventListener("load", (function() {
             + Math.round(item.marketPriceAverage * (item.stackable ? item.quantity : 1)).toLocaleString()
             + (item.stackable ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
     }
-}));
+})();

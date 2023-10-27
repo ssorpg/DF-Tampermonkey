@@ -12,7 +12,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
     const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
@@ -31,10 +31,11 @@ window.addEventListener("load", (function() {
 		const storageData = await new Promise((resolve) => window.webCall("get_storage", callData, resolve, true));
 		const parsedStorageData = Item.parseFlashReturn(storageData);
 
-		parsedStorageData.forEach((entity) => {
-			storage[entity.type] ??= { quantity: 0 };
-			storage[entity.type].quantity += entity.quantity;
-		});
+		for (const [key, entity] of Object.entries(parsedStorageData)) {
+			const { type, quantity } = entity;
+			storage[type] ??= new Item(type);
+			storage[type].quantity += Number(quantity);
+		}
 
 		// TODO: convert to code injector
 		DOMEditor.getCraftingTableCells().forEach((cell) => cell.addEventListener("mousemove", () => setTimeout(getCraftingMaterials, 0)));
@@ -42,6 +43,6 @@ window.addEventListener("load", (function() {
 	}
 
 	function getCraftingMaterials() {
-		const craftingMaterials = DOMEditor.getCraftingTooltip().textContent.matchAll(/([a-z\s]*)\sx\s([0-9]*)/gi);
+		const craftingMaterials = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 	}
-}));
+})();

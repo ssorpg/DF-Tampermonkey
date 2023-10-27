@@ -40,7 +40,7 @@
                 this.itemElement = itemElementOrSelector;
                 this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
             }
-            else if (itemElementOrSelector instanceof String) {
+            else if (typeof itemElementOrSelector === "string") {
                 this.itemSelector = itemElementOrSelector;
             }
             else {

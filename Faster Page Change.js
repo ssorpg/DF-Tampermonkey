@@ -11,7 +11,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
     const { DOMEditor } = window.ssorpg1;
@@ -77,4 +77,4 @@ window.addEventListener("load", (function() {
     }
 
     parent.append(buttonHolder);
-}));
+})();

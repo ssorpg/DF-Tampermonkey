@@ -11,7 +11,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-window.addEventListener("load", (function() {
+(function() {
     "use strict";
 
     const { Item, DOMEditor } = window.ssorpg1;
@@ -37,4 +37,4 @@ window.addEventListener("load", (function() {
         const { scrapValueDiv } = DOMEditor.createTooltipDiv();
         scrapValueDiv.textContent = `Scrap value: $${item.scrapValue.toLocaleString()}`;
     }
-}));
+})();
