@@ -31,8 +31,8 @@
 		const storageData = await new Promise((resolve) => window.webCall("get_storage", callData, resolve, true));
 		const parsedStorageData = Item.parseFlashReturn(storageData);
 
-		for (const [key, entity] of Object.entries(parsedStorageData)) {
-			const { type, quantity } = entity;
+		for (const [key, value] of Object.entries(parsedStorageData)) {
+			const { type, quantity } = value;
 			if (!storage[type]) {
 				storage[type] = new Item(type);
 				storage[type].quantity = 0;
@@ -41,12 +41,34 @@
 		}
 
 		// TODO: convert to code injector
-		DOMEditor.getCraftingTableCells().forEach((cell) => cell.addEventListener("mousemove", () => setTimeout(getCraftingMaterials, 0)));
+		DOMEditor.getCraftingTableCells().forEach((cell) => cell.addEventListener("mousemove", getCraftingMaterialsEvent));
 		return true;
 	}
 
+	function getCraftingMaterialsEvent() {
+		setTimeout(getCraftingMaterials, 0);
+	}
+
 	function getCraftingMaterials() {
-		const craftingMaterials = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
-		// TODO: compare names between craftingMaterials and items in storage, then display how many of that item we have
+		// TODO: color differently based on whether user has enough of item?
+		const craftingMaterialMatches = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
+		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
+
+		const storageEntries = Object.entries(storage).filter((storedItem) => craftingMaterialNames.includes(storedItem[1].name));
+		if (!storageEntries.length) {
+			return;
+		}
+
+		const { storedItemsDiv } = DOMEditor.createTooltipDiv();
+		const storedItemsTitleDiv = document.createElement("div");
+		storedItemsTitleDiv.textContent = "In Storage:";
+		storedItemsDiv.appendChild(storedItemsTitleDiv);
+
+		for (const [key, value] of storageEntries) {
+			const [ id, storedItem ] = value;
+			const storedItemDiv = document.createElement("div");
+			storedItemDiv.textContent = `${storedItem.name} x ${storedItem.quantity}`;
+			storedItemsDiv.appendChild(storedItemDiv);
+		}
 	}
 })();

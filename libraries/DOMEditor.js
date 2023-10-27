@@ -29,7 +29,7 @@
 
 		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
-			let craftingMaterialsDiv = document.getElementById("ssorpg1_CraftingMaterialsDiv");
+			let storedItemsDiv = document.getElementById("ssorpg1_StoredItemsDiv");
 			let scrapValueDiv = document.getElementById("ssorpg1_ScrapValueDiv");
 			let marketPriceDiv = document.getElementById("ssorpg1_MarketPriceDiv");
 
@@ -41,8 +41,8 @@
 				tooltipDiv.style.marginTop = "12px";
 				tooltipDiv.style.color = "#ff8c00";
 
-				craftingMaterialsDiv = document.createElement("div");
-				craftingMaterialsDiv.id = "ssorpg1_CraftingMaterialsDiv";
+				storedItemsDiv = document.createElement("div");
+				storedItemsDiv.id = "ssorpg1_StoredItemsDiv";
 	
 				scrapValueDiv = document.createElement("div");
 				scrapValueDiv.id = "ssorpg1_ScrapValueDiv";
@@ -56,7 +56,7 @@
 				document.getElementById("infoBox").appendChild(tooltipDiv);
 			}
 
-			return { tooltipDiv, craftingMaterialsDiv, scrapValueDiv, marketPriceDiv };
+			return { tooltipDiv, storedItemsDiv, scrapValueDiv, marketPriceDiv };
 		}
 
     	// Cells for use with `Item` class
