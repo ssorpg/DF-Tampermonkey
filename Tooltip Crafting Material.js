@@ -59,7 +59,8 @@
 		if (!itemElement) {
 			return;
 		}
-		
+
+		// Copied from `inventory.js`
 		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
 			return;
 		}

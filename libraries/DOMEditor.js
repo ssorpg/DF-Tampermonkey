@@ -44,12 +44,15 @@
 
 				storedItemsDiv = document.createElement("div");
 				storedItemsDiv.id = "ssorpg1_StoredItemsDiv";
+				storedItemsDiv.className = "itemData";
 
 				scrapValueDiv = document.createElement("div");
 				scrapValueDiv.id = "ssorpg1_ScrapValueDiv";
+				scrapValueDiv.className = "itemData";
 
 				marketPriceDiv = document.createElement("div");
 				marketPriceDiv.id = "ssorpg1_MarketPriceDiv";
+				marketPriceDiv.className = "itemData";
 
 				tooltipDiv.appendChild(storedItemsDiv);
 				tooltipDiv.appendChild(scrapValueDiv);
@@ -108,6 +111,7 @@
 		}
 
 		// Corrects the location of the infoBox when new information is appended
+		// Copied from `inventory.js`
 		infoBoxCorrection() {
 			const { inventoryHolder, mousePos, infoBox } = window;
 			const invHoldOffsets = inventoryHolder.getBoundingClientRect();
