@@ -77,7 +77,15 @@
 		}
 
 		getCraftingTooltip() {
-			return document.getElementById("infoBox").lastChild;
+			const children = document.getElementById("infoBox").children;
+
+			// Find the last child with class `itemData`
+			for (let i = children.length - 1; i >= 0; i--) {
+				const child = children[i];
+				if (child.classList.contains("itemData")) {
+					return child;
+				}
+			}
 		}
 
 		removeAllChildNodes(parent) {

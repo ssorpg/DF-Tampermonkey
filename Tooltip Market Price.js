@@ -2,7 +2,7 @@
 // @name        Tooltip Market Price
 // @grant       none
 // @version     1.0
-// @description Automatically fetches the current market price of hovered inventory items and displays in the tooltip
+// @description Automatically fetches the current market price of hovered inventory items and displays it in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
@@ -32,33 +32,18 @@
         element: document.getElementById("inventoryholder"),
         event: "mousemove",
         oldFunctionName: "infoCard",
-        newFunction: setNextItemEvent,
+        newFunction: setNextItem,
         prepend: false,
         append: true
-    }
+    };
 
-    function setNextItemEvent(e) {
-        if (!enabled) {
-            return;
-        }
-
-        if (!window.curInfoItem) {
-            return;
-        }
-
-        console.log(window.curInfoItem);
-        return;
-
-        if (window.marketScreen === "sell") {
-            setNextItem(window.curInfoItem);
-        }
-    }
+    DOMEditor.replaceEventListener(newEventListenerParams);
 
     // TODO: convert to code injector
     const gcDiv = document.getElementById("gamecontent");
 	if (gcDiv) {
 		const gcObserver = new MutationObserver((mutationList, observer) => {
-			if (window.marketScreen !== "sell") {
+			if (window.marketScreen != "sell") {
 				return;
 			}
 
@@ -83,9 +68,13 @@
 		gcObserver.observe(gcDiv, { childList: true });
 	}
 
-    function setNextItem(inventoryCell) {
-        // Item in the inv slot we moused over
-        nextItem = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
+    function setNextItem() {
+        if (!enabled) {
+            return;
+        }
+
+        const itemElement = window.curInfoItem;
+        nextItem = itemElement ? new Item(itemElement) : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
@@ -94,7 +83,7 @@
 
         // Credits override
         if (nextItem.type == "credits") {
-            nextItem.name = "1 Credits"
+            nextItem.name = "1 Credits";
         }
 
         // No need to debounce if exact same item selected

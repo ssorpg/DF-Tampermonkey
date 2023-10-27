@@ -16,6 +16,5 @@
 		return;
 	}
 
-	// TODO: convert to code injector
 	inventory.addEventListener("mouseout", () => document.getElementById("infoBox").style.visibility = "hidden");
 })();

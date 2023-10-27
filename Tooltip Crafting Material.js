@@ -2,7 +2,7 @@
 // @name        Tooltip Crafting Material
 // @grant       none
 // @version     1.0
-// @description Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays in the tooltip
+// @description Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
 // @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/Item.js
@@ -46,26 +46,25 @@
 			element: document.getElementById("inventoryholder"),
 			event: "mousemove",
 			oldFunctionName: "infoCard",
-			newFunction: getCraftingMaterialsEvent,
+			newFunction: getCraftingMaterials,
 			prepend: false,
 			append: true
-		}
+		};
 
 		DOMEditor.replaceEventListener(newEventListenerParams);
 		return true;
 	}
 
-	function getCraftingMaterialsEvent() {
-		if (!window.curInfoItem) {
+	function getCraftingMaterials() {
+		const itemElement = window.curInfoItem;
+		if (!itemElement) {
 			return;
 		}
 		
-		if (window.curInfoItem.classList.contains("fakeItem") && window.curInfoItem.parentNode.id === "recipes") {
-			getCraftingMaterials();
+		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
+			return;
 		}
-	}
 
-	function getCraftingMaterials() {
 		// Fetches from the tooltip itself
 		const craftingMaterialMatches = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
@@ -75,6 +74,10 @@
 			return;
 		}
 
+		setStoredItemsDiv(storageValues);
+	}
+
+	function setStoredItemsDiv(storageValues) {
 		// TODO: color differently based on whether user has enough of item?
 		const { storedItemsDiv } = DOMEditor.createTooltipDiv();
 		DOMEditor.removeAllChildNodes(storedItemsDiv);
