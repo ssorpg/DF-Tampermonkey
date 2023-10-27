@@ -29,7 +29,7 @@
     document.addEventListener("mouseup", (e) => enabled = true);
 
     const newEventListenerParams = {
-        element: document.getElementById("inventoryholder"),
+        element: window.inventoryHolder,
         event: "mousemove",
         functionName: "infoCard",
         functionBefore: null,
@@ -127,5 +127,6 @@
         marketPriceDiv.textContent = "Est. market price: $"
             + Math.round(item.marketPriceAverage * (item.stackable ? item.quantity : 1)).toLocaleString()
             + (item.stackable ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+        DOMEditor.infoBoxCorrection();
     }
 })();

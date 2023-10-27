@@ -11,10 +11,9 @@
 (function() {
     "use strict";
 
-	const inventory = document.getElementById("inventoryholder");
-	if (!inventory) {
+	if (!window.inventoryHolder) {
 		return;
 	}
 
-	inventory.addEventListener("mouseout", () => document.getElementById("infoBox").style.visibility = "hidden");
+	window.inventoryHolder.addEventListener("mouseout", () => window.infoBox.style.visibility = "hidden");
 })();

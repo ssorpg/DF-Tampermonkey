@@ -55,25 +55,11 @@
 				tooltipDiv.appendChild(scrapValueDiv);
 				tooltipDiv.appendChild(marketPriceDiv);
 
-				document.getElementById("infoBox").appendChild(tooltipDiv);
+				window.infoBox.appendChild(tooltipDiv);
+				this.infoBoxCorrection();
 			}
 
 			return { tooltipDiv, storedItemsDiv, scrapValueDiv, marketPriceDiv };
-		}
-
-    	// Cells for use with `Item` class
-    	getInventoryCells() {
-			const inventory = document.getElementById("inventory");
-
-			if (!inventory) {
-				return [];
-			}
-
-			return Array.from(inventory.children).flatMap((row) => Array.from(row.children));
-		}
-
-		getCraftingTableCells() {
-			return Array.from(document.getElementsByClassName("fakeItem"));
 		}
 
 		getCraftingTooltip() {
@@ -94,7 +80,6 @@
 			}
 		}
 
-		// Appends or prepends a new function to run
 		replaceEventListener(newEventListenerParams) {
 			const { element, event, functionName } = newEventListenerParams;
 
@@ -104,6 +89,7 @@
 		}
 
 		// Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
+		// Appends or prepends a new function to run before or after the given function (on the window)
 		replaceFunction(newFunctionParams) {
 			const { functionName, functionBefore, functionAfter } = newFunctionParams;
 
@@ -119,6 +105,26 @@
 				}
 				return result;
 			};
+		}
+
+		// Corrects the location of the infoBOx when new information is appended
+		infoBoxCorrection() {
+			const { inventoryHolder, mousePos, infoBox } = window;
+			const invHoldOffsets = inventoryHolder.getBoundingClientRect();
+
+			if (mousePos[1] - 30 - infoBox.offsetHeight < invHoldOffsets.top) {
+				infoBox.style.top = (mousePos[1] + 30 - invHoldOffsets.top) + "px";
+			}
+			else {
+				infoBox.style.top = (mousePos[1] - 30 - infoBox.offsetHeight - invHoldOffsets.top) + "px";
+			}
+	
+			if (mousePos[0] + 20 + infoBox.offsetWidth > invHoldOffsets.right) {
+				infoBox.style.left = (inventoryHolder.offsetWidth - infoBox.offsetWidth) + "px";
+			}
+			else {
+				infoBox.style.left = (mousePos[0] + 20 - invHoldOffsets.left) + "px";
+			}
 		}
 	}
 

@@ -17,7 +17,7 @@
     const { Item, DOMEditor } = window.ssorpg1;
 
     const newEventListenerParams = {
-        element: document.getElementById("inventoryholder"),
+        element: window.inventoryHolder,
         event: "mousemove",
         functionName: "infoCard",
         functionBefore: null,
@@ -36,5 +36,6 @@
 
         const { scrapValueDiv } = DOMEditor.createTooltipDiv();
         scrapValueDiv.textContent = `Scrap value: $${item.scrapValue.toLocaleString()}`;
+        DOMEditor.infoBoxCorrection();
     }
 })();

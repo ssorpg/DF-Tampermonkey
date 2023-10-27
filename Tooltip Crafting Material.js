@@ -43,7 +43,7 @@
 		}
 
 		const newEventListenerParams = {
-			element: document.getElementById("inventoryholder"),
+			element: window.inventoryHolder,
 			event: "mousemove",
 			functionName: "infoCard",
 			functionBefore: null,
@@ -91,5 +91,7 @@
 			storedItemDiv.textContent = `${value.name} x ${value.quantity}`;
 			storedItemsDiv.appendChild(storedItemDiv);
 		}
+
+		DOMEditor.infoBoxCorrection();
 	}
 })();
