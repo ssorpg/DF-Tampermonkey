@@ -41,7 +41,7 @@
                 this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
             }
             else if (itemElementOrSelector instanceof String) {
-                this.itemSelector = itemSelector;
+                this.itemSelector = itemElementOrSelector;
             }
             else {
                 throw new Error("Wrong type in Item constructor");
