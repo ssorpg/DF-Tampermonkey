@@ -22,44 +22,53 @@
         itemElement = null;
         itemSelector = null;
         itemData = null;
+        itemQuantity = null;
 
         type = null;
-        quantity = null;
         name = null;
         color = null;
         stackable = false;
+        quantity = null;
         transferable = true;
         scrapValue = null;
 
         marketData = null;
         marketPriceAverage = null;
 
-        constructor() {}
+        constructor(itemElementOrSelector) {
+            if (itemElementOrSelector instanceof HTMLElement) {
+                this.itemElement = itemElementOrSelector;
+                this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
+            }
+            else if (itemElementOrSelector instanceof String) {
+                this.itemSelector = itemSelector;
+            }
+            else {
+                throw new Error("Wrong type in Item constructor");
+            }
 
-        _constructFromElement(itemElement) {
-            this.itemElement = itemElement;
-            this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
-            this._construct();
-        }
-
-        _constructFromItemSelector(itemSelector) {
-            this.itemSelector = itemSelector;
-            this._construct();
-        }
-
-        _construct() {
             this._setItemData();
-            this._setType();
-            this._setQuantity();
+            this._setItemQuantity();
+
             this._setNameAndColor();
+            this._setType();
             this._setStackable();
+            this._setQuantity();
             this._setTransferable();
             this._setScrapValue();
         }
 
+        _setItemData() {
+            this.itemData = window.globalData[this.itemSelector];
+        }
+
+        _setItemQuantity() {
+            this.itemQuantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
+        }
+
         // Seperates clothing colors from item name
         _setNameAndColor() {
-            const nameAsArr = window.itemNamer(this.itemSelector, this.quantity).split(" ");
+            const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
             for (const word of Item.INVALID_WORDS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
@@ -70,20 +79,16 @@
             this.name = nameAsArr.join(" ");
         }
 
-        _setItemData() {
-            this.itemData = window.globalData[this.itemSelector];
-        }
-
         _setType() {
             this.type = this.itemData.itemcat;
         }
 
-        _setQuantity() {
-            this.quantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
-        }
-
         _setStackable() {
             this.stackable = this.type == "ammo" || this.type == "credits";
+        }
+
+        _setQuantity() {
+            this.quantity = this.stackable ? this.itemQuantity : 1;
         }
 
         _setTransferable() {
@@ -91,7 +96,7 @@
         }
 
         _setScrapValue() {
-            this.scrapValue = window.scrapValue(this.itemSelector, this.quantity);
+            this.scrapValue = window.scrapValue(this.itemSelector, this.itemQuantity);
         }
 
 		async setMarketData() {

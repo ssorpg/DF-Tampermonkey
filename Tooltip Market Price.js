@@ -6,10 +6,10 @@
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/Item.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/Helpers.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
@@ -90,14 +90,12 @@ window.addEventListener("load", (function() {
 
     function setNextItem(inventoryCell) {
         // Item in the inv slot we moused over
-        nextItem = inventoryCell.firstChild ? new Item() : null;
+        nextItem = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
             return;
         }
-
-        nextItem._constructFromElement(inventoryCell.firstChild);
 
         // Credits override
         if (nextItem.type == "credits") {
@@ -146,7 +144,7 @@ window.addEventListener("load", (function() {
 
         const { marketPriceDiv } = DOMEditor.createTooltipDiv();
         marketPriceDiv.textContent = "Est. market price: $"
-            + Math.round(item.marketPriceAverage * item.quantity).toLocaleString()
-            + (item.quantity > 1 ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+            + Math.round(item.marketPriceAverage * (item.stackable ? item.quantity : 1)).toLocaleString()
+            + (item.stackable ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
     }
 }));
