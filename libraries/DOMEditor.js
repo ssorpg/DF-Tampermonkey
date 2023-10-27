@@ -27,6 +27,7 @@
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
 		}
 
+		// TODO: refactor
 		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
 			let storedItemsDiv = document.getElementById("ssorpg1_StoredItemsDiv");
@@ -50,6 +51,7 @@
 				marketPriceDiv = document.createElement("div");
 				marketPriceDiv.id = "ssorpg1_MarketPriceDiv";
 	
+				tooltipDiv.appendChild(storedItemsDiv);
 				tooltipDiv.appendChild(scrapValueDiv);
 				tooltipDiv.appendChild(marketPriceDiv);
 	

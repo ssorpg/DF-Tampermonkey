@@ -54,8 +54,8 @@
 		const craftingMaterialMatches = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
 
-		const storageEntries = Object.entries(storage).filter((storedItem) => craftingMaterialNames.includes(storedItem[1].name));
-		if (!storageEntries.length) {
+		const storageValues = Object.values(storage).filter((storedItem) => craftingMaterialNames.includes(storedItem.name));
+		if (!storageValues.length) {
 			return;
 		}
 
@@ -64,10 +64,9 @@
 		storedItemsTitleDiv.textContent = "In Storage:";
 		storedItemsDiv.appendChild(storedItemsTitleDiv);
 
-		for (const [key, value] of storageEntries) {
-			const [ id, storedItem ] = value;
+		for (const value of storageValues) {
 			const storedItemDiv = document.createElement("div");
-			storedItemDiv.textContent = `${storedItem.name} x ${storedItem.quantity}`;
+			storedItemDiv.textContent = `${value.name} x ${value.quantity}`;
 			storedItemsDiv.appendChild(storedItemDiv);
 		}
 	}
