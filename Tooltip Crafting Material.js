@@ -45,10 +45,9 @@
 		const newEventListenerParams = {
 			element: document.getElementById("inventoryholder"),
 			event: "mousemove",
-			oldFunctionName: "infoCard",
-			newFunction: getCraftingMaterials,
-			prepend: false,
-			append: true
+			functionName: "infoCard",
+			functionBefore: null,
+			functionAfter: getCraftingMaterials
 		};
 
 		DOMEditor.replaceEventListener(newEventListenerParams);
@@ -80,6 +79,7 @@
 	function setStoredItemsDiv(storageValues) {
 		// TODO: color differently based on whether user has enough of item?
 		const { storedItemsDiv } = DOMEditor.createTooltipDiv();
+		storedItemsDiv.style.marginBottom = "12px";
 		DOMEditor.removeAllChildNodes(storedItemsDiv);
 
 		const storedItemsTitleDiv = document.createElement("div");

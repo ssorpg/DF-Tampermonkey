@@ -31,10 +31,9 @@
     const newEventListenerParams = {
         element: document.getElementById("inventoryholder"),
         event: "mousemove",
-        oldFunctionName: "infoCard",
-        newFunction: setNextItem,
-        prepend: false,
-        append: true
+        functionName: "infoCard",
+        functionBefore: null,
+        functionAfter: setNextItem
     };
 
     DOMEditor.replaceEventListener(newEventListenerParams);

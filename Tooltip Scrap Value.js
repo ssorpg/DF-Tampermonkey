@@ -19,10 +19,9 @@
     const newEventListenerParams = {
         element: document.getElementById("inventoryholder"),
         event: "mousemove",
-        oldFunctionName: "infoCard",
-        newFunction: setScrapValueDiv,
-        prepend: false,
-        append: true
+        functionName: "infoCard",
+        functionBefore: null,
+        functionAfter: setScrapValueDiv
     };
 
     DOMEditor.replaceEventListener(newEventListenerParams);

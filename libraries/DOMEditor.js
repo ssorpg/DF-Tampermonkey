@@ -44,17 +44,17 @@
 
 				storedItemsDiv = document.createElement("div");
 				storedItemsDiv.id = "ssorpg1_StoredItemsDiv";
-	
+
 				scrapValueDiv = document.createElement("div");
 				scrapValueDiv.id = "ssorpg1_ScrapValueDiv";
-	
+
 				marketPriceDiv = document.createElement("div");
 				marketPriceDiv.id = "ssorpg1_MarketPriceDiv";
-	
+
 				tooltipDiv.appendChild(storedItemsDiv);
 				tooltipDiv.appendChild(scrapValueDiv);
 				tooltipDiv.appendChild(marketPriceDiv);
-	
+
 				document.getElementById("infoBox").appendChild(tooltipDiv);
 			}
 
@@ -96,26 +96,26 @@
 
 		// Appends or prepends a new function to run
 		replaceEventListener(newEventListenerParams) {
-			const { element, event, oldFunctionName } = newEventListenerParams;
+			const { element, event, functionName } = newEventListenerParams;
 
-			element.removeEventListener(event, window[oldFunctionName]);
+			element.removeEventListener(event, window[functionName]);
 			this.replaceFunction(newEventListenerParams);
-			element.addEventListener(event, window[oldFunctionName]);
+			element.addEventListener(event, window[functionName]);
 		}
 
 		// Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
 		replaceFunction(newFunctionParams) {
-			const { oldFunctionName, newFunction, prepend, append } = newFunctionParams;
+			const { functionName, functionBefore, functionAfter } = newFunctionParams;
 
-			const cachedFunction = window[oldFunctionName];
+			const cachedFunction = window[functionName];
 			// Set back to the same `window[functionName]` so that further functions can be injected
-			window[oldFunctionName] = function() {
-				if (prepend) {
-					newFunction(arguments);
+			window[functionName] = function() {
+				if (functionBefore) {
+					functionBefore(arguments);
 				}
 				const result = cachedFunction.apply(this, arguments);
-				if (append) {
-					newFunction(arguments);
+				if (functionAfter) {
+					functionAfter(arguments);
 				}
 				return result;
 			};
