@@ -13,7 +13,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-(function() {
+window.addEventListener("load", (function() {
     "use strict";
 
     const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
@@ -90,12 +90,14 @@
 
     function setNextItem(inventoryCell) {
         // Item in the inv slot we moused over
-        nextItem = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
+        nextItem = inventoryCell.firstChild ? new Item() : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
             return;
         }
+
+        nextItem._constructFromElement(inventoryCell.firstChild);
 
         // Credits override
         if (nextItem.type == "credits") {
@@ -142,9 +144,9 @@
 			return;
 		}
 
-        const [tooltipDiv, scrapValueDiv, marketPriceDiv] = DOMEditor.createTooltipDiv();
+        const { marketPriceDiv } = DOMEditor.createTooltipDiv();
         marketPriceDiv.textContent = "Est. market price: $"
             + Math.round(item.marketPriceAverage * item.quantity).toLocaleString()
             + (item.quantity > 1 ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
     }
-})();
+}));

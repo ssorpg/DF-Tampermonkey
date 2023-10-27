@@ -29,6 +29,7 @@
 
 		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
+			let craftingMaterialsDiv = document.getElementById("ssorpg1_CraftingMaterialsDiv");
 			let scrapValueDiv = document.getElementById("ssorpg1_ScrapValueDiv");
 			let marketPriceDiv = document.getElementById("ssorpg1_MarketPriceDiv");
 
@@ -39,6 +40,9 @@
 				tooltipDiv.style.whiteSpace = "pre";
 				tooltipDiv.style.marginTop = "12px";
 				tooltipDiv.style.color = "#ff8c00";
+
+				craftingMaterialsDiv = document.createElement("div");
+				craftingMaterialsDiv.id = "ssorpg1_CraftingMaterialsDiv";
 	
 				scrapValueDiv = document.createElement("div");
 				scrapValueDiv.id = "ssorpg1_ScrapValueDiv";
@@ -52,7 +56,7 @@
 				document.getElementById("infoBox").appendChild(tooltipDiv);
 			}
 
-			return [tooltipDiv, scrapValueDiv, marketPriceDiv];
+			return { tooltipDiv, craftingMaterialsDiv, scrapValueDiv, marketPriceDiv };
 		}
 
     	// Cells for use with `Item` class
@@ -64,6 +68,14 @@
 			}
 
 			return Array.from(inventory.children).flatMap((row) => Array.from(row.children));
+		}
+
+		getCraftingTableCells() {
+			return Array.from(document.getElementsByClassName("fakeItem"));
+		}
+
+		getCraftingTooltip() {
+			return document.getElementById("infoBox").lastChild;
 		}
 	}
 

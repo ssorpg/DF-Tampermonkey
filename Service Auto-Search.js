@@ -9,7 +9,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-(function() {
+window.addEventListener("load", (function() {
     "use strict";
 
 	const { WebcallScheduler } = window.ssorpg1;
@@ -40,7 +40,7 @@
     });
 
 	async function tradeSearch() {
-        const dataArray = {
+        const callData = {
             pagetime: window.userVars.pagetime,
             tradezone: window.userVars.DFSTATS_df_tradezone,
             searchname: "75",
@@ -51,8 +51,8 @@
             search: "services"
         };
 
-		const data = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-		window.flshToArr(`${data}&services=${dataArray.profession}&searcheditem=${dataArray.searchname}`, "", window.listMarket);
+		const data = await new Promise((resolve) => window.webCall("trade_search", callData, resolve, true));
+		window.flshToArr(`${data}&services=${callData.profession}&searcheditem=${callData.searchname}`, "", window.listMarket);
 		window.populateInventory();
 		window.updateAllFields();
 		return true;
@@ -60,4 +60,4 @@
 
     buttonHolder.appendChild(newButton);
     document.body.appendChild(buttonHolder);
-})();
+}));

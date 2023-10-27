@@ -20,38 +20,46 @@
 
     class Item {
         itemElement = null;
+        itemSelector = null;
         itemData = null;
 
+        type = null;
+        quantity = null;
         name = null;
         color = null;
-        type = null;
         stackable = false;
-        quantity = null;
         transferable = true;
         scrapValue = null;
 
         marketData = null;
         marketPriceAverage = null;
 
-        constructor(itemElement) {
-            this.itemElement = itemElement;
-            this._setItemDataFromElement();
+        constructor() {}
 
-            this._setNameAndColor();
+        _constructFromElement(itemElement) {
+            this.itemElement = itemElement;
+            this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
+            this._construct();
+        }
+
+        _constructFromItemSelector(itemSelector) {
+            this.itemSelector = itemSelector;
+            this._construct();
+        }
+
+        _construct() {
+            this._setItemData();
             this._setType();
-            this._setStackable();
             this._setQuantity();
+            this._setNameAndColor();
+            this._setStackable();
             this._setTransferable();
             this._setScrapValue();
         }
 
-        _setItemDataFromElement() {
-            this.itemData = window.globalData[(this.itemElement.dataset.type.trim().split("_"))[0]];
-        }
-
         // Seperates clothing colors from item name
         _setNameAndColor() {
-            const nameAsArr = this._getItemNameFromElement().split(" ");
+            const nameAsArr = window.itemNamer(this.itemSelector, this.quantity).split(" ");
             for (const word of Item.INVALID_WORDS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
@@ -62,32 +70,32 @@
             this.name = nameAsArr.join(" ");
         }
 
-        _getItemNameFromElement() {
-            return window.itemNamer(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
+        _setItemData() {
+            this.itemData = window.globalData[this.itemSelector];
         }
 
         _setType() {
-            this.type = this.itemElement.dataset.itemtype;
+            this.type = this.itemData.itemcat;
+        }
+
+        _setQuantity() {
+            this.quantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
         }
 
         _setStackable() {
             this.stackable = this.type == "ammo" || this.type == "credits";
         }
 
-        _setQuantity() {
-            this.quantity = this.stackable ? Number(this.itemElement.dataset.quantity) : 1;
-        }
-
         _setTransferable() {
-            this.transferable = this.itemData.no_transfer != "1";
+            this.transferable = !this.itemData.no_transfer;
         }
 
         _setScrapValue() {
-            this.scrapValue = window.scrapValue(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
+            this.scrapValue = window.scrapValue(this.itemSelector, this.quantity);
         }
 
 		async setMarketData() {
-			const dataArray = {
+			const callData = {
 				pagetime: window.userVars.pagetime,
 				tradezone: window.userVars.DFSTATS_df_tradezone,
 				searchname: this.name,
@@ -98,7 +106,7 @@
 				searchtype: "buyinglistitemname"
 			};
 
-			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", callData, resolve, true));
             const parsedMarketData = Item.parseFlashReturn(rawMarketData);
             const filteredMarketData = Object.entries(parsedMarketData).filter(([key, entity]) => entity.itemname == this.name);
             this.marketData = Object.fromEntries(filteredMarketData);
@@ -133,10 +141,10 @@
 
     Item.parseFlashReturn = function(flash) {
         const flashAsObj = {};
-        const flashMatches = flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g);
+        const flashMatches = flash.matchAll(/([a-z]*[_a-z]+)_*([0-9]*)_(.*?)=(.*?)&/gi);
 
         for (const entity of flashMatches) {
-            const [, type, num, field, value] = entity;
+            const [match, type, num, field, value] = entity;
             flashAsObj[num] ??= {};
             flashAsObj[num][field] = value;
         }

@@ -11,7 +11,7 @@
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
-(function() {
+window.addEventListener("load", (function() {
     "use strict";
 
     const { Item, DOMEditor } = window.ssorpg1;
@@ -34,7 +34,7 @@
             return;
         }
 
-        const [tooltipDiv, scrapValueDiv, marketPriceDiv] = DOMEditor.createTooltipDiv();
+        const { scrapValueDiv } = DOMEditor.createTooltipDiv();
         scrapValueDiv.textContent = `Scrap value: $${item.scrapValue.toLocaleString()}`;
     }
-})();
+}));
