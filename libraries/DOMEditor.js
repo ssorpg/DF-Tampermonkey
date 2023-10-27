@@ -81,5 +81,11 @@
 		}
 	}
 
+	DOMEditor.removeAllChildNodes = function(parent) {
+		while (parent.firstChild) {
+			parent.removeChild(parent.firstChild);
+		}
+	}
+
 	window.ssorpg1.DOMEditor = new DOMEditor();
 })();

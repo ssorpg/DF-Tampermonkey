@@ -60,6 +60,8 @@
 		}
 
 		const { storedItemsDiv } = DOMEditor.createTooltipDiv();
+		DOMEditor.removeAllChildNodes(storedItemsDiv);
+
 		const storedItemsTitleDiv = document.createElement("div");
 		storedItemsTitleDiv.textContent = "In Storage:";
 		storedItemsDiv.appendChild(storedItemsTitleDiv);
