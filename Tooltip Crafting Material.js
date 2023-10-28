@@ -20,6 +20,7 @@
 	const storage = {};
 
 	WebcallScheduler.enqueue(getStorage);
+
 	async function getStorage() {
 		const callData = {
 			pagetime: window.userVars.pagetime,
@@ -39,6 +40,7 @@
 				storage[type] = new Item(type);
 				storage[type].quantity = 0;
 			}
+
 			storage[type].quantity += Number(quantity);
 		}
 
@@ -61,14 +63,14 @@
 			return;
 		}
 
-		const item = new Item(itemElement);
-
 		// Copied from `inventory.js`
 		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
 			return;
 		}
 
+		const item = new Item(itemElement);
 		const storageValues = Object.values(storage).filter((storedItem) => item.craftingMaterials[storedItem.name]);
+
 		if (!storageValues.length) {
 			return;
 		}

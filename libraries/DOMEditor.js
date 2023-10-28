@@ -109,9 +109,9 @@
 		// Appends or prepends a new function to run before or after the given function (on the window)
 		replaceFunction(newFunctionParams) {
 			const { functionName, functionBefore, functionAfter } = newFunctionParams;
-
 			const cachedFunction = window[functionName];
-			// Set back to the same `window[functionName]` so that further functions can be injected
+
+			// Sets back to the same `window[functionName]` so that further functions can be injected
 			window[functionName] = function() {
 				if (functionBefore) {
 					functionBefore(arguments);

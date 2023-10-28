@@ -21,9 +21,9 @@
 	let curItem = null;
 
 	// When dragging and dropping, don't set nextItem
-	let enabled = true;
-	document.addEventListener("mousedown", (e) => enabled = false);
-	document.addEventListener("mouseup", (e) => enabled = true);
+	let dragging = false;
+	document.addEventListener("mousedown", (e) => dragging = true);
+	document.addEventListener("mouseup", (e) => dragging = false);
 
 	const newEventListenerParams = {
 		element: window.inventoryHolder,
@@ -65,8 +65,8 @@
 	}
 
 	function setNextItem() {
-		if (!enabled) {
-				return;
+		if (dragging) {
+			return;
 		}
 
 		const itemElement = window.curInfoItem;
