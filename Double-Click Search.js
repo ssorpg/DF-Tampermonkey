@@ -5,9 +5,9 @@
 // @description	Allows the user to double-click an item on the marketplace screen to search for it
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/Item.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/WebcallScheduler.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 

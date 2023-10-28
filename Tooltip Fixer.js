@@ -5,7 +5,7 @@
 // @description	Fixes various tooltip bugs
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 

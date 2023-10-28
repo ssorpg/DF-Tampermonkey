@@ -7,7 +7,7 @@
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?action=pm*
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
