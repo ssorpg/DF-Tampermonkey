@@ -186,7 +186,7 @@
 
 		for (const value of flashMatches) {
 			const [match, type, num, itemData, itemValue] = value;
-			flashAsObj[num] = {};
+			flashAsObj[num] ??= {};
 			flashAsObj[num][itemData] = itemValue;
 		}
 
