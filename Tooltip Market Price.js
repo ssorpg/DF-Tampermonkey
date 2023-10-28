@@ -6,10 +6,10 @@
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Item.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/WebcallScheduler.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Helpers.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
@@ -78,17 +78,17 @@
 
 		const nextItem = new Item(itemElement);
 
-		// Credits override
-		if (nextItem.category == "credits") {
-			nextItem.name = "1 Credits";
-		}
-
 		// Exact same item selected
 		if (Item.checkSameItem(nextItem, curItem)) {
 			if (curItem.marketPriceAverage) {
 				setMarketPriceDiv(curItem);
 			}
 			return;
+		}
+
+		// Credits override
+		if (nextItem.category == "credits") {
+			nextItem.name = "1 Credits";
 		}
 
 		curItem = nextItem;

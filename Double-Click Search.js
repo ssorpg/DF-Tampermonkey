@@ -5,8 +5,9 @@
 // @description	Allows the user to double-click an item on the marketplace screen to search for it
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Item.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
@@ -20,15 +21,17 @@
 			return;
 		}
 
-		WebcallScheduler.enqueue(tradeSearch);
+		// Save to variable so we don't lose it
+		const currentTarget = e.currentTarget;
+		WebcallScheduler.enqueue(async () => await tradeSearch(currentTarget));
 	}));
 
-	async function tradeSearch() {
+	async function tradeSearch(currentTarget) {
 		if (window.marketScreen != "buy") {
 			return;
 		}
 
-		const itemElement = window.curInfoItem;
+		const itemElement = currentTarget.firstChild;
 
 		if (!itemElement) {
 			return;
