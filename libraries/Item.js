@@ -98,7 +98,7 @@
         }
 
         _setTransferable() {
-            this.transferable = !this.itemData.no_transfer;
+            this.transferable = this.itemData.no_transfer != "1";
         }
 
         _setScrapValue() {
