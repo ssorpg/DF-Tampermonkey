@@ -28,11 +28,12 @@
 
     function setScrapValueDiv() {
         const itemElement = window.curInfoItem;
-        const item = itemElement ? new Item(itemElement) : null;
 
-        if (!item) {
+        if (!itemElement) {
             return;
         }
+
+        const item = new Item(itemElement);
 
         const { scrapValueDiv } = DOMEditor.createTooltipDiv();
         scrapValueDiv.textContent = `Scrap value: $${item.scrapValue.toLocaleString()}`;

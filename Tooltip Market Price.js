@@ -72,19 +72,20 @@
         }
 
         const itemElement = window.curInfoItem;
-        const nextItem = itemElement ? new Item(itemElement) : null;
 
-        // No need to debounce if no item selected
-        if (!nextItem) {
+        // No item selected
+        if (!itemElement) {
             return;
         }
+
+        const nextItem = new Item(itemElement);
 
         // Credits override
         if (nextItem.category == "credits") {
             nextItem.name = "1 Credits";
         }
 
-        // No need to debounce if exact same item selected
+        // Exact same item selected
         if (Item.checkSameItem(nextItem, curItem)) {
             if (curItem.marketPriceAverage) {
                 setMarketPriceDiv(curItem);
@@ -99,7 +100,7 @@
 		}
 
         // Save it so we don't lose it on callback
-        const item = curItem;
+        const item = nextItem;
 		WebcallScheduler.enqueue(async () => await tradeSearch(item));
     }
 
@@ -112,7 +113,7 @@
 			return;
 		}
 
-        // No need to fetch if exact same item selected
+        // No need to fetch if exact same item selected and has already fetched
         if (isSameItem && curItem.marketPriceAverage) {
             setMarketPriceDiv(curItem);
             return;

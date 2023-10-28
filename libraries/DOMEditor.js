@@ -148,4 +148,5 @@
 	}
 
 	window.ssorpg1.DOMEditor = new DOMEditor();
+	console.log(window.ssorpg1.DOMEditor);
 })();

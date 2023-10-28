@@ -86,7 +86,7 @@
         // Seperates clothing colors from item name
         _setColorAndName() {
             const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
-            for (const word of Item.INVALID_WORDS) {
+            for (const word of Item.COLORS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
                     break;
@@ -182,7 +182,7 @@
         return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
     }
 
-    Item.INVALID_WORDS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
+    Item.COLORS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
     Item.MAX_PRICES_TO_AVERAGE = 5;
     Item.MAX_MARKET_NAME = 20;
 
