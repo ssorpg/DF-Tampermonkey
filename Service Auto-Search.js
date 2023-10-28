@@ -5,7 +5,7 @@
 // @description Automatically searches for service professionals of a certain level
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
+// @require		https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
@@ -40,7 +40,7 @@
     });
 
 	async function tradeSearch() {
-        const dataArray = {
+        const callData = {
             pagetime: window.userVars.pagetime,
             tradezone: window.userVars.DFSTATS_df_tradezone,
             searchname: "75",
@@ -51,8 +51,8 @@
             search: "services"
         };
 
-		const data = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
-		window.flshToArr(`${data}&services=${dataArray.profession}&searcheditem=${dataArray.searchname}`, "", window.listMarket);
+		const data = await new Promise((resolve) => window.webCall("trade_search", callData, resolve, true));
+		window.flshToArr(`${data}&services=${callData.profession}&searcheditem=${callData.searchname}`, "", window.listMarket);
 		window.populateInventory();
 		window.updateAllFields();
 		return true;

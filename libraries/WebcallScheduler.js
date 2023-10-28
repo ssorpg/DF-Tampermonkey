@@ -22,13 +22,13 @@
 		scheduler = null;
 		queue = [];
 
-		// Pass a function which contains a webcall
-		enqueue(webcall) {
-			if (!webcall) {
+		// Pass a callback which contains a webcall
+		enqueue(callback) {
+			if (!callback) {
 				return;
 			}
 
-			this.queue.push(webcall);
+			this.queue.push(callback);
 			if (!this.scheduler) {
 				this.scheduler = setTimeout(() => this.dequeue(), 0);
 			}
@@ -36,13 +36,13 @@
 
 		// Runs the next function in queue
 		async dequeue() {
-			const webcall = this.queue.shift();
-			if (!webcall) {
+			const callback = this.queue.shift();
+			if (!callback) {
 				this.scheduler = clearTimeout(this.scheduler);
 				return;
 			}
 
-			const calledToServer = await webcall();
+			const calledToServer = await callback();
 			if (!calledToServer) {
 				this.dequeue();
 				return;

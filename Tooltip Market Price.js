@@ -2,14 +2,14 @@
 // @name        Tooltip Market Price
 // @grant       none
 // @version     1.0
-// @description Automatically fetches the current market price of hovered inventory items and displays in the tooltip
+// @description Automatically fetches the current market price of hovered inventory items and displays it in the tooltip
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/DF3D/DF3D_InventoryPage.php?page=31*
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
+// @require     https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/Item.js
+// @require     https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
+// @require     https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/Helpers.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
@@ -28,42 +28,21 @@
     document.addEventListener("mousedown", (e) => enabled = false);
     document.addEventListener("mouseup", (e) => enabled = true);
 
-    // TODO: convert to code injector
-    DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousemove", setNextItemEvent));
+    const newEventListenerParams = {
+        element: window.inventoryHolder,
+        event: "mousemove",
+        functionName: "infoCard",
+        functionBefore: null,
+        functionAfter: setNextItem
+    };
 
-    // Courtesy of https://stackoverflow.com/questions/9134686/adding-code-to-a-javascript-function-programmatically
-	// Code injector
-    window.loadMarket = (function() {
-        const cachedFunction = window.loadMarket;
-
-        return function() {
-            const result = cachedFunction.apply(this, arguments);
-
-            if (window.marketScreen === "sell") {
-                document.getElementById("creditSlot").addEventListener("mousemove", setNextItemEvent);
-            }
-
-            return result;
-        };
-    })();
-
-    function setNextItemEvent(e) {
-        if (!enabled) {
-            return;
-        }
-
-        // `currentTarget` is lost after a timeout
-        const inventoryCell = e.currentTarget;
-
-        // Push to end of event queue so that window variables are up-to-date
-        setTimeout(setNextItem, 0, inventoryCell);
-    }
+    DOMEditor.replaceEventListener(newEventListenerParams);
 
     // TODO: convert to code injector
     const gcDiv = document.getElementById("gamecontent");
 	if (gcDiv) {
 		const gcObserver = new MutationObserver((mutationList, observer) => {
-			if (window.marketScreen !== "sell") {
+			if (window.marketScreen != "sell") {
 				return;
 			}
 
@@ -88,9 +67,13 @@
 		gcObserver.observe(gcDiv, { childList: true });
 	}
 
-    function setNextItem(inventoryCell) {
-        // Item in the inv slot we moused over
-        nextItem = inventoryCell.firstChild ? new Item(inventoryCell.firstChild) : null;
+    function setNextItem() {
+        if (!enabled) {
+            return;
+        }
+
+        const itemElement = window.curInfoItem;
+        nextItem = itemElement ? new Item(itemElement) : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
@@ -99,7 +82,7 @@
 
         // Credits override
         if (nextItem.type == "credits") {
-            nextItem.name = "1 Credits"
+            nextItem.name = "1 Credits";
         }
 
         // No need to debounce if exact same item selected
@@ -113,16 +96,14 @@
         curItem = nextItem;
         nextItem = null;
 
-		enqueue(curItem);
-    }
-
-	function enqueue(item) {
-		if (!item.transferable) {
+		if (!curItem.transferable) {
 			return;
 		}
 
+        // Save it so we don't lose it on callback
+        const item = curItem;
 		WebcallScheduler.enqueue(async () => await tradeSearch(item));
-	}
+    }
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
@@ -142,9 +123,10 @@
 			return;
 		}
 
-        const [tooltipDiv, scrapValueDiv, marketPriceDiv] = DOMEditor.createTooltipDiv();
+        const { marketPriceDiv } = DOMEditor.createTooltipDiv();
         marketPriceDiv.textContent = "Est. market price: $"
-            + Math.round(item.marketPriceAverage * item.quantity).toLocaleString()
-            + (item.quantity > 1 ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+            + Math.round(item.marketPriceAverage * (item.stackable ? item.quantity : 1)).toLocaleString()
+            + (item.stackable ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+        DOMEditor.infoBoxCorrection();
     }
 })();

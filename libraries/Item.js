@@ -20,11 +20,14 @@
 
     class Item {
         itemElement = null;
+        itemSelector = null;
         itemData = null;
+        itemQuantity = null;
 
-        name = null;
-        color = null;
         type = null;
+        color = null;
+        name = null;
+        category = null;
         stackable = false;
         quantity = null;
         transferable = true;
@@ -33,25 +36,45 @@
         marketData = null;
         marketPriceAverage = null;
 
-        constructor(itemElement) {
-            this.itemElement = itemElement;
-            this._setItemDataFromElement();
+        constructor(itemElementOrSelector) {
+            if (itemElementOrSelector instanceof HTMLElement) {
+                this.itemElement = itemElementOrSelector;
+                this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
+            }
+            else if (typeof itemElementOrSelector === "string") {
+                this.itemSelector = itemElementOrSelector;
+            }
+            else {
+                throw new Error("Wrong type in Item constructor");
+            }
 
-            this._setNameAndColor();
+            this._setItemData();
+            this._setItemQuantity();
+
             this._setType();
+            this._setColorAndName();
+            this._setCategory();
             this._setStackable();
             this._setQuantity();
             this._setTransferable();
             this._setScrapValue();
         }
 
-        _setItemDataFromElement() {
-            this.itemData = window.globalData[(this.itemElement.dataset.type.trim().split("_"))[0]];
+        _setItemData() {
+            this.itemData = window.globalData[this.itemSelector];
+        }
+
+        _setItemQuantity() {
+            this.itemQuantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
+        }
+
+        _setType() {
+            this.type = this.itemElement ? this.itemElement.dataset.type : this.itemSelector;
         }
 
         // Seperates clothing colors from item name
-        _setNameAndColor() {
-            const nameAsArr = this._getItemNameFromElement().split(" ");
+        _setColorAndName() {
+            const nameAsArr = window.itemNamer(this.type, this.itemQuantity).split(" ");
             for (const word of Item.INVALID_WORDS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
@@ -62,20 +85,16 @@
             this.name = nameAsArr.join(" ");
         }
 
-        _getItemNameFromElement() {
-            return window.itemNamer(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
-        }
-
-        _setType() {
-            this.type = this.itemElement.dataset.itemtype;
+        _setCategory() {
+            this.category = this.itemData.itemcat;
         }
 
         _setStackable() {
-            this.stackable = this.type == "ammo" || this.type == "credits";
+            this.stackable = this.category == "ammo" || this.category == "credits";
         }
 
         _setQuantity() {
-            this.quantity = this.stackable ? Number(this.itemElement.dataset.quantity) : 1;
+            this.quantity = this.stackable ? this.itemQuantity : 1;
         }
 
         _setTransferable() {
@@ -83,14 +102,14 @@
         }
 
         _setScrapValue() {
-            this.scrapValue = window.scrapValue(this.itemElement.dataset.type, this.itemElement.dataset.quantity);
+            this.scrapValue = window.scrapValue(this.type, this.itemQuantity);
         }
 
 		async setMarketData() {
-			const dataArray = {
+			const callData = {
 				pagetime: window.userVars.pagetime,
 				tradezone: window.userVars.DFSTATS_df_tradezone,
-				searchname: this.name,
+				searchname: this.name.length >= 20 ? this.name.substr(0, 20) : this.name,
 				memID: "",
 				profession: "",
 				category: "",
@@ -98,9 +117,9 @@
 				searchtype: "buyinglistitemname"
 			};
 
-			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", dataArray, resolve, true));
+			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", callData, resolve, true));
             const parsedMarketData = Item.parseFlashReturn(rawMarketData);
-            const filteredMarketData = Object.entries(parsedMarketData).filter(([key, entity]) => entity.itemname == this.name);
+            const filteredMarketData = Object.entries(parsedMarketData).filter(([key, value]) => value.itemname == this.name);
             this.marketData = Object.fromEntries(filteredMarketData);
 		}
 
@@ -112,8 +131,8 @@
 
             let marketPriceSum = 0;
             let counter = 0;
-            for (const [key, entity] of Object.entries(this.marketData)) {
-                const { price, quantity } = entity;
+            for (const [key, value] of Object.entries(this.marketData)) {
+                const { price, quantity } = value;
                 const _quantity = this.stackable ? Number(quantity) : 1;
                 marketPriceSum += Number(price) / _quantity;
 
@@ -133,12 +152,12 @@
 
     Item.parseFlashReturn = function(flash) {
         const flashAsObj = {};
-        const flashMatches = flash.matchAll(/(.*?)_(.*?)_(.*?)=(.*?)&/g);
+        const flashMatches = flash.trim().matchAll(/([a-z]*_*[a-z]+)_*([0-9]+)_(.*?)=(.*?)(?:&|$)/gi);
 
-        for (const entity of flashMatches) {
-            const [, type, num, field, value] = entity;
+        for (const value of flashMatches) {
+            const [match, type, num, itemData, itemValue] = value;
             flashAsObj[num] ??= {};
-            flashAsObj[num][field] = value;
+            flashAsObj[num][itemData] = itemValue;
         }
 
         return flashAsObj;
