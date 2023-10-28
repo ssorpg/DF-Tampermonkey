@@ -126,8 +126,8 @@
 			this.craftingMaterials = {};
 			const craftingMaterialMatches = requiredItemsDesc.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 			for (const value of craftingMaterialMatches) {
-				const [ match, material, quantity ] = value;
-				this.craftingMaterials[material] = quantity;
+				const [ match, item, quantity ] = value;
+				this.craftingMaterials[item] = quantity;
 			}
 		}
 
