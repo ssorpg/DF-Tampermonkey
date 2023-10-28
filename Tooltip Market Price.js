@@ -37,7 +37,7 @@
 
     DOMEditor.replaceEventListener(newEventListenerParams);
 
-    // TODO: convert to code injector
+    // TODO: replace function instead
     const gcDiv = document.getElementById("gamecontent");
 	if (gcDiv) {
 		const gcObserver = new MutationObserver((mutationList, observer) => {
@@ -55,7 +55,7 @@
 			}
 
 			// Price field
-			const quantity = curItem.type == "credits" ? DEFAULT_CREDIT_AMOUNT : curItem.quantity;
+			const quantity = curItem.category == "credits" ? DEFAULT_CREDIT_AMOUNT : curItem.quantity;
 			moneyField[0].value = Math.round(curItem.marketPriceAverage * quantity);
 
 			// `Yes` button
@@ -80,7 +80,7 @@
         }
 
         // Credits override
-        if (nextItem.type == "credits") {
+        if (nextItem.category == "credits") {
             nextItem.name = "1 Credits";
         }
 

@@ -13,24 +13,15 @@
 
 	const { Item, DOMEditor } = window.ssorpg1;
 
-	DOMEditor.getInventoryCells.forEach((cell) => cell.addEventListener("dblclick", tradeSearch));
+	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("dblclick", tradeSearch));
 
-	if (window.inventoryHolder) {
-		window.inventoryHolder.addEventListener("mouseout", () => window.infoBox.style.visibility = "hidden");
-		window.inventoryHolder.style.overflow = "visible";
-	}
+	async function tradeSearch(e) {
+		if (window.marketScreen != "buy") {
+			return;
+		}
 
-	const overflowHiddenElements_1 = document.getElementsByClassName("design2010");
-	if (overflowHiddenElements_1) {
-		Array.from(overflowHiddenElements_1).forEach((element) => {
-			if (element.tagName == "TABLE") {
-				element.style.overflow = "visible";
-			}
-		});
-	}
-
-	const overflowHiddenElements_2 = document.querySelectorAll("[style*='_height: 1%; overflow: auto;']");
-	if (overflowHiddenElements_2) {
-		Array.from(overflowHiddenElements_2).forEach((element) => element.style.overflow = "visible");
+		const itemElement = window.curInfoItem;
+        const item = itemElement ? new Item(itemElement) : null;
+		console.log(item);
 	}
 })();

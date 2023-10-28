@@ -19,21 +19,35 @@
     }
 
     class Item {
+        // The element this Item was constructed from
         itemElement = null;
+        // A string which can be used to select itemData `window.globalData`
         itemSelector = null;
+        // Its data from `window.globalData`
         itemData = null;
+        // The item's stated quantity (only relevant if constructed from an element)
         itemQuantity = null;
 
-        type = null;
+        // Color of the item
         color = null;
+        // Display name of the item (no color)
         name = null;
+        // Item category (ammo, armor, etc)
         category = null;
+        // Can this item be stacked?
         stackable = false;
+        // "Real" quantity of the item
         quantity = null;
+        // Can this item be transfered?
         transferable = true;
+        // Dollar value for scrapping
         scrapValue = null;
 
+        // The item's searchable name (for use fetching marketData)
+        marketName = null;
+        // Flash data fetched from backend
         marketData = null;
+        // Calculated from `marketData`
         marketPriceAverage = null;
 
         constructor(itemElementOrSelector) {
@@ -51,13 +65,14 @@
             this._setItemData();
             this._setItemQuantity();
 
-            this._setType();
             this._setColorAndName();
             this._setCategory();
             this._setStackable();
             this._setQuantity();
             this._setTransferable();
             this._setScrapValue();
+
+            this._setSearchableName();
         }
 
         _setItemData() {
@@ -68,13 +83,9 @@
             this.itemQuantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
         }
 
-        _setType() {
-            this.type = this.itemElement ? this.itemElement.dataset.type : this.itemSelector;
-        }
-
         // Seperates clothing colors from item name
         _setColorAndName() {
-            const nameAsArr = window.itemNamer(this.type, this.itemQuantity).split(" ");
+            const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
             for (const word of Item.INVALID_WORDS) {
                 if (nameAsArr[0] == word) {
                     this.color = nameAsArr.shift();
@@ -102,14 +113,18 @@
         }
 
         _setScrapValue() {
-            this.scrapValue = window.scrapValue(this.type, this.itemQuantity);
+            this.scrapValue = window.scrapValue(this.itemSelector, this.itemQuantity);
+        }
+
+        _setMarketName() {
+            this.marketName = this.name.length >= Item.MAX_MARKET_NAME ? this.name.substr(0, Item.MAX_MARKET_NAME) : this.name;
         }
 
 		async setMarketData() {
 			const callData = {
 				pagetime: window.userVars.pagetime,
 				tradezone: window.userVars.DFSTATS_df_tradezone,
-				searchname: this.name.length >= 20 ? this.name.substr(0, 20) : this.name,
+				searchname: this.marketName,
 				memID: "",
 				profession: "",
 				category: "",
@@ -169,6 +184,7 @@
 
     Item.INVALID_WORDS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
     Item.MAX_PRICES_TO_AVERAGE = 5;
+    Item.MAX_MARKET_NAME = 20;
 
     window.ssorpg1.Item = Item;
 })();
