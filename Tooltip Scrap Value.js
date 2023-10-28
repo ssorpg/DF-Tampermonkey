@@ -14,6 +14,10 @@
 (function() {
 	"use strict";
 
+	if (!window.inventoryHolder) {
+		return;
+	}
+
 	const { Item, DOMEditor } = window.ssorpg1;
 
 	const newEventListenerParams = {

@@ -16,6 +16,10 @@
 (function() {
 	"use strict";
 
+	if (!window.inventoryHolder) {
+		return;
+	}
+
 	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
 	let curItem = null;
