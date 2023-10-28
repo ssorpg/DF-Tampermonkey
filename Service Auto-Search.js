@@ -39,11 +39,18 @@
             return;
         }
 
-        document.getElementById("searchField").value = "75";
-        document.getElementById("categoryChoice").dataset.catname = "Engineer";
-        document.getElementById("categoryChoice").dataset.cattype = "service";
-        document.getElementById("cat").textContent = "Services - Repair";
-        document.getElementById("makeSearch").disabled = false;
+        const {
+            searchField,
+            categoryChoice,
+            cat,
+            makeSearch
+        } = DOMEditor.getTradeSearchElements();
+
+        searchField.value = "75";
+        categoryChoice.dataset.catname = "Engineer";
+        categoryChoice.dataset.cattype = "service";
+        cat.textContent = "Services - Repair";
+        makeSearch.disabled = false;
 
         const callData = {
             pagetime: window.userVars.pagetime,

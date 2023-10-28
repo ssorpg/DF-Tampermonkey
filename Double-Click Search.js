@@ -21,8 +21,13 @@
 			return;
 		}
 
-		const itemElement = window.curInfoItem;
-        const item = itemElement ? new Item(itemElement) : null;
+        const itemElement = window.curInfoItem;
+
+        if (!itemElement) {
+            return;
+        }
+
+        const item = new Item(itemElement);
 		console.log(item);
 	}
 })();

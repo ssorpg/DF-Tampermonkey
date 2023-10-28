@@ -31,11 +31,10 @@
 			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
 		}
 
-		// All the elements required to do a search
+		// All the elements required to perform a search
 		getTradeSearchElements() {
 			return {
 				searchField: document.getElementById("searchField"),
-				categoryChoice: document.getElementById("categoryChoice"),
 				categoryChoice: document.getElementById("categoryChoice"),
 				cat: document.getElementById("cat"),
 				makeSearch: document.getElementById("makeSearch")
