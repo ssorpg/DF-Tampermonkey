@@ -21,7 +21,6 @@
     const DEFAULT_CREDIT_AMOUNT = 100;
 
     let curItem = null;
-    let nextItem = null;
 
     // When dragging and dropping, don't set nextItem
     let enabled = true;
@@ -73,7 +72,7 @@
         }
 
         const itemElement = window.curInfoItem;
-        nextItem = itemElement ? new Item(itemElement) : null;
+        const nextItem = itemElement ? new Item(itemElement) : null;
 
         // No need to debounce if no item selected
         if (!nextItem) {
@@ -94,7 +93,6 @@
         }
 
         curItem = nextItem;
-        nextItem = null;
 
 		if (!curItem.transferable) {
 			return;
@@ -120,8 +118,8 @@
             return;
         }
 
-		await item.setMarketData();
-        item.setMarketPriceAverage();
+		await curItem.setMarketData();
+        curItem.setMarketPriceAverage();
         setMarketPriceDiv(item);
 		return true;
 	}
