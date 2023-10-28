@@ -20,23 +20,21 @@
 
 	let curItem = null;
 
-	// When dragging and dropping, don't set nextItem
+	// When dragging and dropping, setNextItem only once
 	let dragging = false;
+	let hasSetItemOnDrag = false;
 	document.addEventListener("mousedown", (e) => dragging = true);
-	document.addEventListener("mouseup", (e) => dragging = false);
+	document.addEventListener("mouseup", (e) => {
+		dragging = false;
+		hasSetItemOnDrag = false;
+	});
 
 	const newEventListenerParams = {
 		element: window.inventoryHolder,
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
-		functionAfter: () => {
-			if (dragging) {
-				return;
-			}
-
-			setNextItem();
-		}
+		functionAfter: setNextItem
 	};
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
@@ -47,7 +45,7 @@
 		setNextItem();
 	}));
 
-	// TODO: replace function instead
+	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
 	const gcDiv = document.getElementById("gamecontent");
 	if (gcDiv) {
 		const gcObserver = new MutationObserver((mutationList, observer) => {
@@ -77,6 +75,14 @@
 	}
 
 	function setNextItem() {
+		// Only allow a single item update when we start dragging the item
+		if (dragging && hasSetItemOnDrag) {
+			return;
+		}
+		else if (dragging) {
+			hasSetItemOnDrag = true;
+		}
+
 		const itemElement = window.curInfoItem;
 
 		// No item selected
