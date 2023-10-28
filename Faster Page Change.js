@@ -48,8 +48,8 @@
     }
 
     // Get parent we're going to append to
-    const parent = DOMEditor.getMainMenuBottom();
-    parent.style.position = "relative";
+    const mainMenuBottom = DOMEditor.getMainMenuBottom();
+    mainMenuBottom.style.position = "relative";
 
     // Contains the buttons
     const buttonHolder = document.createElement("div");
@@ -76,5 +76,5 @@
         buttonHolder.appendChild(newButton);
     }
 
-    parent.append(buttonHolder);
+    mainMenuBottom.append(buttonHolder);
 })();

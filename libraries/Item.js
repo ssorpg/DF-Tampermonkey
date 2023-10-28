@@ -72,7 +72,7 @@
             this._setTransferable();
             this._setScrapValue();
 
-            this._setSearchableName();
+            this._setMarketName();
         }
 
         _setItemData() {
