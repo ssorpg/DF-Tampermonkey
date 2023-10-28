@@ -41,17 +41,6 @@
 
 		let contextMenuOpened = false;
 
-		document.addEventListener("mousedown", function(e) {
-			if (!contextMenuOpened) {
-				return;
-			}
-
-			if (e.target !== ctxMenuHolder && e.target.parentNode !== ctxMenuHolder) {
-				window.pageLock = false;
-				contextMenuOpened = false;
-			}
-		});
-
 		const newEventListenerParams = {
 			element: window.inventoryHolder,
 			event: "contextmenu",
@@ -61,5 +50,12 @@
 		};
 
 		DOMEditor.replaceEventListener(newEventListenerParams);
+
+		document.addEventListener("mousedown", (e) => {
+			if (contextMenuOpened && e.target !== ctxMenuHolder && e.target.parentNode !== ctxMenuHolder) {
+				window.pageLock = false;
+				contextMenuOpened = false;
+			}
+		});
 	}
 })();
