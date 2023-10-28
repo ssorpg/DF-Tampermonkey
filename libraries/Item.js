@@ -109,7 +109,7 @@
 			const callData = {
 				pagetime: window.userVars.pagetime,
 				tradezone: window.userVars.DFSTATS_df_tradezone,
-				searchname: this.name,
+				searchname: this.name.length >= 20 ? this.name.substr(0, 20) : this.name,
 				memID: "",
 				profession: "",
 				category: "",
