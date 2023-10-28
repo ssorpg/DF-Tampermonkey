@@ -20,10 +20,14 @@
 
 	let curItem = null;
 
-	// When dragging and dropping, don't set nextItem
+	// When dragging and dropping, setNextItem only once
 	let dragging = false;
+	let hasSetItemOnDrag = false;
 	document.addEventListener("mousedown", (e) => dragging = true);
-	document.addEventListener("mouseup", (e) => dragging = false);
+	document.addEventListener("mouseup", (e) => {
+		dragging = false;
+		hasSetItemOnDrag = false;
+	});
 
 	const newEventListenerParams = {
 		element: window.inventoryHolder,
@@ -35,7 +39,13 @@
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
 
-	// TODO: replace function instead
+	// Forces a tooltip update when dragging
+	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
+		window.curInfoItem = e.currentTarget.firstChild;
+		setNextItem();
+	}));
+
+	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
 	const gcDiv = document.getElementById("gamecontent");
 	if (gcDiv) {
 		const gcObserver = new MutationObserver((mutationList, observer) => {
@@ -65,8 +75,12 @@
 	}
 
 	function setNextItem() {
-		if (dragging) {
+		// Only allow a single item update when we start dragging the item
+		if (dragging && hasSetItemOnDrag) {
 			return;
+		}
+		else if (dragging) {
+			hasSetItemOnDrag = true;
 		}
 
 		const itemElement = window.curInfoItem;

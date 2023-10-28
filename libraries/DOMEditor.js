@@ -79,18 +79,6 @@
 			return { tooltipDiv, storedItemsDiv, scrapValueDiv, marketPriceDiv };
 		}
 
-		getCraftingMaterialsTooltip() {
-			const children = document.getElementById("infoBox").children;
-
-			// Find the last child with class `itemData`
-			for (let i = children.length - 1; i >= 0; i--) {
-				const child = children[i];
-				if (child.classList.contains("itemData")) {
-					return child;
-				}
-			}
-		}
-
 		removeAllChildNodes(parent) {
 			while (parent.firstChild) {
 				parent.removeChild(parent.firstChild);
@@ -136,7 +124,7 @@
 			else {
 				infoBox.style.top = (mousePos[1] - 30 - infoBox.offsetHeight - invHoldOffsets.top) + "px";
 			}
-	
+
 			if (mousePos[0] + 20 + infoBox.offsetWidth > invHoldOffsets.right) {
 				infoBox.style.left = (inventoryHolder.offsetWidth - infoBox.offsetWidth) + "px";
 			}
@@ -144,8 +132,28 @@
 				infoBox.style.left = (mousePos[0] + 20 - invHoldOffsets.left) + "px";
 			}
 		}
+
+		// Corrects the location of the services contextMenu
+		// Copied from `market.js`
+		contextMenuCorrection(contextMenu) {
+			const { inventoryHolder, mousePos } = window;
+			const invHoldOffsets = inventoryHolder.getBoundingClientRect();
+
+			if (mousePos[1] + contextMenu.offsetHeight > invHoldOffsets.bottom) {
+				contextMenu.style.top = (mousePos[1] - contextMenu.offsetHeight - invHoldOffsets.top) + "px";
+			}
+			else {
+				contextMenu.style.top = (mousePos[1] - invHoldOffsets.top) + "px";
+			}
+
+			if (mousePos[0] + contextMenu.offsetWidth > invHoldOffsets.right) {
+				contextMenu.style.left = (inventoryHolder.offsetWidth - 40 - contextMenu.offsetWidth) + "px";
+			}
+			else {
+				contextMenu.style.left = (mousePos[0] - invHoldOffsets.left) + "px";
+			}
+		}
 	}
 
 	window.ssorpg1.DOMEditor = new DOMEditor();
-	console.log(window.ssorpg1.DOMEditor);
 })();
