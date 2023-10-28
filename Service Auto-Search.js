@@ -5,14 +5,15 @@
 // @description Automatically searches for service professionals of a certain level
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
+// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/WebcallScheduler.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
 (function() {
     "use strict";
 
-	const { WebcallScheduler } = window.ssorpg1;
+	const { DOMEditor, WebcallScheduler } = window.ssorpg1;
 
     const buttonHolder = document.createElement("div");
     buttonHolder.id = "ssorpg1_EngineerAutoSearchDiv";
@@ -34,6 +35,10 @@
     });
 
 	async function tradeSearch() {
+        if (window.marketScreen != "buy") {
+            return;
+        }
+
         document.getElementById("searchField").value = "75";
         document.getElementById("categoryChoice").dataset.catname = "Engineer";
         document.getElementById("categoryChoice").dataset.cattype = "service";
