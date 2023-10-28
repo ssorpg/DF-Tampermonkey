@@ -56,9 +56,12 @@
 
 	function getCraftingMaterials() {
 		const itemElement = window.curInfoItem;
+
 		if (!itemElement) {
 			return;
 		}
+
+		const item = new Item(itemElement);
 
 		// Copied from `inventory.js`
 		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
@@ -66,6 +69,7 @@
 		}
 
 		// Fetches from the tooltip itself
+		// TODO: fetch from `itemData`
 		const craftingMaterialMatches = DOMEditor.getCraftingMaterialsTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
 

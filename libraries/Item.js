@@ -30,7 +30,7 @@
 
 		// Color of the item
 		color = null;
-		// Display name of the item (no color)
+		// Display name of the item (without color)
 		name = null;
 		// Item category (ammo, armor, etc)
 		category = null;
@@ -42,6 +42,8 @@
 		transferable = true;
 		// Dollar value for scrapping
 		scrapValue = null;
+		// Materials required to craft
+		craftingMaterials = null;
 
 		// The item's searchable name (for use fetching marketData)
 		marketName = null;
@@ -71,6 +73,7 @@
 			this._setQuantity();
 			this._setTransferable();
 			this._setScrapValue();
+			this._setCraftingMaterials();
 
 			this._setMarketName();
 		}
@@ -86,11 +89,8 @@
 		// Seperates clothing colors from item name
 		_setColorAndName() {
 			const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
-			for (const word of Item.COLORS) {
-				if (nameAsArr[0] == word) {
-					this.color = nameAsArr.shift();
-					break;
-				}
+			if (Item.COLORS.includes(nameAsArr[0])) {
+				this.color = nameAsArr.shift();
 			}
 
 			this.name = nameAsArr.join(" ");
@@ -114,6 +114,21 @@
 
 		_setScrapValue() {
 			this.scrapValue = window.scrapValue(this.itemSelector, this.itemQuantity);
+		}
+
+		_setCraftingMaterials() {
+			const { requiredItemsDesc } = this.itemData;
+
+			if (!requiredItemsDesc) {
+				return;
+			}
+
+			this.craftingMaterials ??= {};
+			const craftingMaterialMatches = requiredItemsDesc.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
+			for (const value of craftingMaterialMatches) {
+				const [ match, material, quantity ] = value;
+				this.craftingMaterials[Item.nameToSelector(material)] = quantity;
+			}
 		}
 
 		_setMarketName() {
@@ -180,6 +195,15 @@
 
 	Item.checkSameItem = function(item1, item2) {
 		return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
+	}
+
+	Item.nameToSelector = function(name) {
+		const nameAsArr = name.split(" ");
+		if (Item.COLORS.includes(nameAsArr[0])) {
+			nameAsArr.shift();
+		}
+
+		return nameAsArr.replace("-", "").toLowerCase();
 	}
 
 	Item.COLORS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
