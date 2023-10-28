@@ -113,8 +113,7 @@
 		}
 
 		_setScrapValue() {
-			const scrapName = this.itemElement ? this.itemElement.dataset.type : this.itemSelector;
-			this.scrapValue = window.scrapValue(scrapName, this.itemQuantity);
+			this.scrapValue = window.scrapValue(this.itemElement ? this.itemElement.dataset.type : this.itemSelector, this.itemQuantity);
 		}
 
 		_setCraftingMaterials() {
