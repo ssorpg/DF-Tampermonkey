@@ -27,6 +27,21 @@
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
 		}
 
+    	getInventoryCells() {
+			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
+		}
+
+		// All the elements required to do a search
+		getTradeSearchElements() {
+			return {
+				searchField: document.getElementById("searchField"),
+				categoryChoice: document.getElementById("categoryChoice"),
+				categoryChoice: document.getElementById("categoryChoice"),
+				cat: document.getElementById("cat"),
+				makeSearch: document.getElementById("makeSearch")
+			}
+		}
+
 		// TODO: refactor
 		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
@@ -65,7 +80,7 @@
 			return { tooltipDiv, storedItemsDiv, scrapValueDiv, marketPriceDiv };
 		}
 
-		getCraftingTooltip() {
+		getCraftingMaterialsTooltip() {
 			const children = document.getElementById("infoBox").children;
 
 			// Find the last child with class `itemData`

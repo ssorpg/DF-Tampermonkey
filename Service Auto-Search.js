@@ -30,16 +30,16 @@
             return;
         }
 
+		WebcallScheduler.enqueue(tradeSearch);
+    });
+
+	async function tradeSearch() {
         document.getElementById("searchField").value = "75";
         document.getElementById("categoryChoice").dataset.catname = "Engineer";
         document.getElementById("categoryChoice").dataset.cattype = "service";
         document.getElementById("cat").textContent = "Services - Repair";
         document.getElementById("makeSearch").disabled = false;
 
-		WebcallScheduler.enqueue(tradeSearch);
-    });
-
-	async function tradeSearch() {
         const callData = {
             pagetime: window.userVars.pagetime,
             tradezone: window.userVars.DFSTATS_df_tradezone,
