@@ -85,6 +85,7 @@
 
 		const storedItemsTitleDiv = document.createElement("div");
 		storedItemsTitleDiv.textContent = "In Storage:";
+		storedItemsTitleDiv.style.color = "white";
 		storedItemsDiv.appendChild(storedItemsTitleDiv);
 
 		for (const value of storageValues) {
