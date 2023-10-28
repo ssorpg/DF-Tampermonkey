@@ -5,10 +5,10 @@
 // @description	Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/WebcallScheduler.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Services-Context-Menu/libraries/Helpers.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
