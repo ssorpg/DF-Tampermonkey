@@ -107,10 +107,18 @@
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
+        const isSameItem = Item.checkSameItem(item, curItem);
+
 		// New curItem, drop this one
-		if (!Item.checkSameItem(item, curItem)) {
+		if (!isSameItem) {
 			return;
 		}
+
+        // No need to fetch if exact same item selected
+        if (isSameItem && curItem.marketPriceAverage) {
+            setMarketPriceDiv(curItem);
+            return;
+        }
 
 		await item.setMarketData();
         item.setMarketPriceAverage();
