@@ -76,7 +76,7 @@
 		button.addEventListener("mousedown", WebcallScheduler.enqueue(async (e) => await findService(e)));
 
 		contextMenu.appendChild(title);
-		contextMenu.append(button);
+		contextMenu.appendChild(button);
 		contextMenu.style.visibility = "visible";
 	}
 

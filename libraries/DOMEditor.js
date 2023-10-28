@@ -133,6 +133,8 @@
 			}
 		}
 
+		// Corrects the location of the services contextMenu
+		// Copied from `market.js`
 		contextMenuCorrection(contextMenu) {
 			const { inventoryHolder, mousePos } = window;
 			const invHoldOffsets = inventoryHolder.getBoundingClientRect();
@@ -154,5 +156,4 @@
 	}
 
 	window.ssorpg1.DOMEditor = new DOMEditor();
-	console.log(window.ssorpg1.DOMEditor);
 })();
