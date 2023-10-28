@@ -5,7 +5,7 @@
 // @description Automatically searches for service professionals of a certain level
 // @author      ssorpg1
 // @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
+// @require		https://raw.githubusercontent.com/ssorpg/main/Tooltip-Crafting-Material/libraries/WebcallScheduler.js
 // @namespace   https://greasyfork.org/users/279200
 // ==/UserScript==
 
