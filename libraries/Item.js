@@ -123,7 +123,7 @@
 				return;
 			}
 
-			this.craftingMaterials ??= {};
+			this.craftingMaterials = {};
 			const craftingMaterialMatches = requiredItemsDesc.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
 			for (const value of craftingMaterialMatches) {
 				const [ match, material, quantity ] = value;
@@ -186,7 +186,7 @@
 
 		for (const value of flashMatches) {
 			const [match, type, num, itemData, itemValue] = value;
-			flashAsObj[num] ??= {};
+			flashAsObj[num] = {};
 			flashAsObj[num][itemData] = itemValue;
 		}
 
@@ -209,6 +209,7 @@
 	Item.COLORS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
 	Item.MAX_PRICES_TO_AVERAGE = 5;
 	Item.MAX_MARKET_NAME = 20;
+	Item.DEFAULT_CREDIT_AMOUNT = 100;
 
 	window.ssorpg1.Item = Item;
 })();

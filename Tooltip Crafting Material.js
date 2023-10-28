@@ -68,12 +68,7 @@
 			return;
 		}
 
-		// Fetches from the tooltip itself
-		// TODO: fetch from `itemData`
-		const craftingMaterialMatches = DOMEditor.getCraftingMaterialsTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
-		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
-
-		const storageValues = Object.values(storage).filter((storedItem) => craftingMaterialNames.includes(storedItem.name));
+		const storageValues = Object.values(storage).filter((storedItem) => item.craftingMaterials[storedItem.name]);
 		if (!storageValues.length) {
 			return;
 		}

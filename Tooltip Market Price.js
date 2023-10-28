@@ -18,8 +18,6 @@
 
 	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
-	const DEFAULT_CREDIT_AMOUNT = 100;
-
 	let curItem = null;
 
 	// When dragging and dropping, don't set nextItem
@@ -55,7 +53,7 @@
 			}
 
 			// Price field
-			const quantity = curItem.category == "credits" ? DEFAULT_CREDIT_AMOUNT : curItem.quantity;
+			const quantity = curItem.category == "credits" ? Item.DEFAULT_CREDIT_AMOUNT : curItem.quantity;
 			moneyField[0].value = Math.round(curItem.marketPriceAverage * quantity);
 
 			// `Yes` button

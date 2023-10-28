@@ -27,11 +27,11 @@
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
 		}
 
-			getInventoryCells() {
+		getInventoryCells() {
 			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
 		}
 
-		// All the elements required to perform a search
+		// All the elements required to perform a trade search
 		getTradeSearchElements() {
 			return {
 				searchField: document.getElementById("searchField"),
@@ -121,7 +121,7 @@
 					functionAfter(arguments);
 				}
 				return result;
-			};
+			}
 		}
 
 		// Corrects the location of the infoBox when new information is appended
