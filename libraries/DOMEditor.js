@@ -136,7 +136,7 @@
 			else {
 				infoBox.style.top = (mousePos[1] - 30 - infoBox.offsetHeight - invHoldOffsets.top) + "px";
 			}
-	
+
 			if (mousePos[0] + 20 + infoBox.offsetWidth > invHoldOffsets.right) {
 				infoBox.style.left = (inventoryHolder.offsetWidth - infoBox.offsetWidth) + "px";
 			}

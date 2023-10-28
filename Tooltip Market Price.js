@@ -30,10 +30,22 @@
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
-		functionAfter: setNextItem
+		functionAfter: () => {
+			if (dragging) {
+				return;
+			}
+
+			setNextItem();
+		}
 	};
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
+
+	// Forces a tooltip update when dragging
+	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
+		window.curInfoItem = e.currentTarget.firstChild;
+		setNextItem();
+	}));
 
 	// TODO: replace function instead
 	const gcDiv = document.getElementById("gamecontent");
@@ -65,10 +77,6 @@
 	}
 
 	function setNextItem() {
-		if (dragging) {
-			return;
-		}
-
 		const itemElement = window.curInfoItem;
 
 		// No item selected
