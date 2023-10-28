@@ -1,12 +1,12 @@
 // ==UserScript==
 // ==UserLibrary==
-// @name        DOMEditor
-// @grant       none
-// @version     1.0
-// @description Library to provide DOM selectors for difficult-to-select elements as well as elements shared between scripts
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/
-// @namespace   https://greasyfork.org/users/279200
+// @name		DOMEditor
+// @grant		none
+// @version		1.0
+// @description	Library to provide DOM selectors for difficult-to-select elements as well as elements shared between scripts
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserLibrary==
 // ==/UserScript==
 
@@ -25,6 +25,20 @@
 
 		getMainMenuBottom() {
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
+		}
+
+		getInventoryCells() {
+			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
+		}
+
+		// All the elements required to perform a trade search
+		getTradeSearchElements() {
+			return {
+				searchField: document.getElementById("searchField"),
+				categoryChoice: document.getElementById("categoryChoice"),
+				cat: document.getElementById("cat"),
+				makeSearch: document.getElementById("makeSearch")
+			}
 		}
 
 		// TODO: refactor
@@ -65,7 +79,7 @@
 			return { tooltipDiv, storedItemsDiv, scrapValueDiv, marketPriceDiv };
 		}
 
-		getCraftingTooltip() {
+		getCraftingMaterialsTooltip() {
 			const children = document.getElementById("infoBox").children;
 
 			// Find the last child with class `itemData`
@@ -95,9 +109,9 @@
 		// Appends or prepends a new function to run before or after the given function (on the window)
 		replaceFunction(newFunctionParams) {
 			const { functionName, functionBefore, functionAfter } = newFunctionParams;
-
 			const cachedFunction = window[functionName];
-			// Set back to the same `window[functionName]` so that further functions can be injected
+
+			// Sets back to the same `window[functionName]` so that further functions can be injected
 			window[functionName] = function() {
 				if (functionBefore) {
 					functionBefore(arguments);
@@ -107,7 +121,7 @@
 					functionAfter(arguments);
 				}
 				return result;
-			};
+			}
 		}
 
 		// Corrects the location of the infoBox when new information is appended
@@ -133,4 +147,5 @@
 	}
 
 	window.ssorpg1.DOMEditor = new DOMEditor();
+	console.log(window.ssorpg1.DOMEditor);
 })();

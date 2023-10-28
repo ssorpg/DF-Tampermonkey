@@ -1,12 +1,12 @@
 // ==UserScript==
 // ==UserLibrary==
-// @name        Helpers
-// @grant       none
-// @version     1.0
+// @name		Helpers
+// @grant		none
+// @version		1.0
 // @description Library to provide extraneous helper functions
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/
-// @namespace   https://greasyfork.org/users/279200
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserLibrary==
 // ==/UserScript==
 

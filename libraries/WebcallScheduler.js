@@ -1,12 +1,12 @@
 // ==UserScript==
 // ==UserLibrary==
-// @name        WebcallScheduler
-// @grant       none
-// @version     1.1
+// @name		WebcallScheduler
+// @grant		none
+// @version		1.1
 // @description Library to provide a client-side ratelimit to webcalls
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/
-// @namespace   https://greasyfork.org/users/279200
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserLibrary==
 // ==/UserScript==
 

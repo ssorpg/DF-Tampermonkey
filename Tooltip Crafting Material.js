@@ -1,25 +1,26 @@
 // ==UserScript==
-// @name        Tooltip Crafting Material
-// @grant       none
-// @version     1.0
-// @description Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
+// @name		Tooltip Crafting Material
+// @grant		none
+// @version		1.0
+// @description	Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
-// @namespace   https://greasyfork.org/users/279200
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Helpers.js
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
 (function() {
-    "use strict";
+	"use strict";
 
-    const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
 	const storage = {};
 
 	WebcallScheduler.enqueue(getStorage);
+
 	async function getStorage() {
 		const callData = {
 			pagetime: window.userVars.pagetime,
@@ -39,6 +40,7 @@
 				storage[type] = new Item(type);
 				storage[type].quantity = 0;
 			}
+
 			storage[type].quantity += Number(quantity);
 		}
 
@@ -56,6 +58,7 @@
 
 	function getCraftingMaterials() {
 		const itemElement = window.curInfoItem;
+
 		if (!itemElement) {
 			return;
 		}
@@ -65,11 +68,9 @@
 			return;
 		}
 
-		// Fetches from the tooltip itself
-		const craftingMaterialMatches = DOMEditor.getCraftingTooltip().textContent.matchAll(/\s*([a-z\s]*)\sx\s([0-9]*)/gi);
-		const craftingMaterialNames = Array.from(craftingMaterialMatches).map((match) => match[1]);
+		const item = new Item(itemElement);
+		const storageValues = Object.values(storage).filter((storedItem) => item.craftingMaterials[storedItem.name]);
 
-		const storageValues = Object.values(storage).filter((storedItem) => craftingMaterialNames.includes(storedItem.name));
 		if (!storageValues.length) {
 			return;
 		}
