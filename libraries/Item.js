@@ -203,7 +203,7 @@
 			nameAsArr.shift();
 		}
 
-		return nameAsArr.join().replace("-", "").toLowerCase();
+		return nameAsArr.join("").replace("-", "").toLowerCase();
 	}
 
 	Item.COLORS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
