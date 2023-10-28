@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name        Tooltip Crafting Material
-// @grant       none
-// @version     1.0
-// @description Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Item.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/DOMEditor.js
+// @name		Tooltip Crafting Material
+// @grant		none
+// @version		1.0
+// @description	Automatically fetches the number of crafting materials in storage when hovering over a craftable item and displays it in the tooltip
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=59
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/DOMEditor.js
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/WebcallScheduler.js
-// @require     https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Helpers.js
-// @namespace   https://greasyfork.org/users/279200
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/double-click-search/libraries/Helpers.js
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
 (function() {
-    "use strict";
+	"use strict";
 
-    const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
 	const storage = {};
 

@@ -1,12 +1,12 @@
 // ==UserScript==
 // ==UserLibrary==
-// @name        DOMEditor
-// @grant       none
-// @version     1.0
-// @description Library to provide DOM selectors for difficult-to-select elements as well as elements shared between scripts
-// @author      ssorpg1
-// @match       https://fairview.deadfrontier.com/
-// @namespace   https://greasyfork.org/users/279200
+// @name		DOMEditor
+// @grant		none
+// @version		1.0
+// @description	Library to provide DOM selectors for difficult-to-select elements as well as elements shared between scripts
+// @author		ssorpg1
+// @match		https://fairview.deadfrontier.com/
+// @namespace	https://greasyfork.org/users/279200
 // ==/UserLibrary==
 // ==/UserScript==
 
@@ -27,7 +27,7 @@
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
 		}
 
-    	getInventoryCells() {
+			getInventoryCells() {
 			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
 		}
 
