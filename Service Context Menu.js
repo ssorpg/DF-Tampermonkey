@@ -11,7 +11,6 @@
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
-// TODO: convert this to a right-click context menu
 (function() {
 	"use strict";
 

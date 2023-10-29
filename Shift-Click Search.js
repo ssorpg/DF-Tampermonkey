@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name		Double-Click Search
+// @name		Shift-Click Search
 // @grant		none
 // @version		1.0
-// @description	Allows the user to double-click an item on the marketplace screen to search for it
+// @description	Allows the user to shift-click an item on the marketplace screen to search for it
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
@@ -16,8 +16,12 @@
 
 	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
-	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("dblclick", (e) => {
+	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
 		if (window.marketScreen != "buy") {
+			return;
+		}
+
+		if (!e.shiftKey) {
 			return;
 		}
 
