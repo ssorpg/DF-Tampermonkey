@@ -2,7 +2,7 @@
 // @name		Service Context Menu
 // @grant		none
 // @version		1.0
-// @description	Provides a context menu to automatically searches for service professionals of a certain level
+// @description	Provides a right-click context menu to automatically search for service professionals
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
