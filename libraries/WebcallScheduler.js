@@ -53,7 +53,7 @@
 	}
 
 	// Time to wait between webcalls
-	WebcallScheduler.RATE_LIMIT = 300;
+	WebcallScheduler.RATE_LIMIT = 1000;
 
 	window.ssorpg1.WebcallScheduler = new WebcallScheduler();
 })();
