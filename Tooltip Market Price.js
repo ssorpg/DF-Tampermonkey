@@ -22,7 +22,10 @@
 
 	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
+	const DEBOUNCE_TIME = 300;
+
 	let curItem = null;
+	let debounceTimeout = null;
 
 	// When dragging and dropping, setNextItem only once
 	let dragging = false;
@@ -38,7 +41,7 @@
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
-		functionAfter: setNextItem
+		functionAfter: debounce
 	};
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
@@ -76,6 +79,11 @@
 
 		// Waits for child additions or removals and calls the above function
 		gcObserver.observe(gcDiv, { childList: true });
+	}
+
+	function debounce() {
+		clearTimeout(debounceTimeout);
+		debounceTimeout = setTimeout(setNextItem, DEBOUNCE_TIME);
 	}
 
 	function setNextItem() {
