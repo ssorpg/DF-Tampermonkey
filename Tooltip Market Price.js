@@ -22,7 +22,7 @@
 
 	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
-	const DEBOUNCE_TIME = 300;
+	const DEBOUNCE_TIME = 100;
 
 	let curItem = null;
 	let debounceTimeout = null;
