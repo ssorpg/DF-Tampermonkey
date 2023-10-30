@@ -23,12 +23,18 @@
 		queue = [];
 
 		// Pass a callback which contains a webcall
-		enqueue(callback) {
+		enqueue(callback, toFront) {
 			if (!callback) {
 				return;
 			}
 
-			this.queue.push(callback);
+			if (toFront) {
+				this.queue.unshift(callback);
+			}
+			else {
+				this.queue.push(callback);
+			}
+			
 			if (!this.scheduler) {
 				this.scheduler = setTimeout(() => this.dequeue(), 0);
 			}

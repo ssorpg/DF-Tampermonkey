@@ -49,7 +49,7 @@
 	// Forces a tooltip update when dragging
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
 		window.curInfoItem = e.currentTarget.firstChild;
-		setNextItem();
+		setNextItem(toFront);
 	}));
 
 	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
@@ -86,7 +86,7 @@
 		debounceTimeout = setTimeout(setNextItem, DEBOUNCE_TIME);
 	}
 
-	function setNextItem() {
+	function setNextItem(toFront) {
 		// Only allow a single item update when we start dragging the item
 		if (dragging && hasSetItemOnDrag) {
 			return;
@@ -125,7 +125,7 @@
 
 		// Save it so we don't lose it on callback
 		const item = nextItem;
-		WebcallScheduler.enqueue(async () => await tradeSearch(item));
+		WebcallScheduler.enqueue(async () => await tradeSearch(item), toFront);
 	}
 
 	// Fetches an item's market data from the marketplace
