@@ -49,7 +49,7 @@
 	// Forces a tooltip update when dragging
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
 		window.curInfoItem = e.currentTarget.firstChild;
-		setNextItem(toFront);
+		setNextItem(true);
 	}));
 
 	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
