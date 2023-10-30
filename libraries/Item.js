@@ -89,7 +89,7 @@
 		// Seperates clothing colors from item name
 		_setColorAndName() {
 			const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
-			if (Item.COLORS.includes(nameAsArr[0])) {
+			if (this.itemData.othercolours?.includes(nameAsArr[0])) {
 				this.color = nameAsArr.shift();
 			}
 
@@ -206,7 +206,6 @@
 		return nameAsArr.join("").replace("-", "").toLowerCase();
 	}
 
-	Item.COLORS = ["Black", "Blue", "Brown", "Green", "Grey", "Red", "White", "Yellow"];
 	Item.MAX_PRICES_TO_AVERAGE = 5;
 	Item.MAX_MARKET_NAME = 20;
 	Item.DEFAULT_CREDIT_AMOUNT = 100;
