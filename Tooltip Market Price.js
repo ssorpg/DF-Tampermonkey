@@ -22,35 +22,28 @@
 
 	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
-	const DEBOUNCE_TIME = 100;
+	const DEBOUNCE_TIME = 50;
 
 	let curItem = null;
 	let debounceTimeout = null;
-
-	// When dragging and dropping, setNextItem only once
-	let dragging = false;
-	let hasSetItemOnDrag = false;
-	document.addEventListener("mousedown", (e) => dragging = true);
-	document.addEventListener("mouseup", (e) => {
-		dragging = false;
-		hasSetItemOnDrag = false;
-	});
 
 	const newEventListenerParams = {
 		element: window.inventoryHolder,
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
-		functionAfter: debounce
+		functionAfter: setNextItem_Hover
 	};
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
 
+	// When dragging and dropping, setNextItem only once
+	let dragging = false;
+	document.addEventListener("mousedown", (e) => dragging = true);
+	document.addEventListener("mouseup", (e) => dragging = false);
+
 	// Forces a tooltip update when dragging
-	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
-		window.curInfoItem = e.currentTarget.firstChild;
-		setNextItem(true);
-	}));
+	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", async (e) => await setNextItem_Drag(e.currentTarget.firstChild)));
 
 	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
 	const gcDiv = document.getElementById("gamecontent");
@@ -81,76 +74,109 @@
 		gcObserver.observe(gcDiv, { childList: true });
 	}
 
-	function debounce() {
+	function setNextItem_Hover() {
 		clearTimeout(debounceTimeout);
-		debounceTimeout = setTimeout(setNextItem, DEBOUNCE_TIME);
-	}
 
-	function setNextItem(toFront) {
-		// Only allow a single item update when we start dragging the item
-		if (dragging && hasSetItemOnDrag) {
-			return;
-		}
-		else if (dragging) {
-			hasSetItemOnDrag = true;
-		}
-
-		const itemElement = window.curInfoItem;
-
-		// No item selected
-		if (!itemElement) {
+		if (dragging) {
 			return;
 		}
 
-		const nextItem = new Item(itemElement);
-
-		// Exact same item selected
-		if (Item.checkSameItem(nextItem, curItem)) {
-			if (curItem.marketPriceAverage) {
-				setMarketPriceDiv(curItem);
-			}
+		// No item hovered
+		if (!window.curInfoItem) {
 			return;
 		}
 
-		// Credits override
-		if (nextItem.category == "credits") {
-			nextItem.name = "1 Credits";
-		}
+		const item = new Item(window.curInfoItem);
 
-		curItem = nextItem;
-
-		if (!curItem.transferable) {
-			return;
-		}
-
-		// Save it so we don't lose it on callback
-		const item = nextItem;
-		WebcallScheduler.enqueue(async () => await tradeSearch(item), toFront);
-	}
-
-	// Fetches an item's market data from the marketplace
-	async function tradeSearch(item) {
-		const isSameItem = Item.checkSameItem(item, curItem);
-
-		// New curItem, drop this one
-		if (!isSameItem) {
+		if (!item.transferable) {
 			return;
 		}
 
 		// No need to fetch if exact same item selected and has already fetched
-		if (isSameItem && curItem.marketPriceAverage) {
+		if (Item.checkSameItem(item, curItem) && curItem.marketPriceAverage) {
 			setMarketPriceDiv(curItem);
 			return;
 		}
 
-		await curItem.setMarketData();
-		curItem.setMarketPriceAverage();
+		// Credits override
+		if (item.category == "credits") {
+			item.name = "1 Credits";
+		}
+
+		curItem = item;
+		debounceTimeout = setTimeout(() => WebcallScheduler.enqueue(async () => await tradeSearch(item)), DEBOUNCE_TIME);
+	}
+
+	async function setNextItem_Drag(itemElement) {
+		window.curInfoItem = itemElement;
+
+		// No item hovered
+		if (!window.curInfoItem) {
+			return;
+		}
+
+		const item = new Item(window.curInfoItem);
+
+		if (!item.transferable) {
+			return;
+		}
+
+		// No need to fetch if exact same item selected and has already fetched
+		if (Item.checkSameItem(item, curItem) && curItem.marketPriceAverage) {
+			return;
+		}
+
+		// Credits override
+		if (item.category == "credits") {
+			item.name = "1 Credits";
+		}
+
+		curItem = item;
+		await tradeSearch(item);
+	}
+
+	// Fetches an item's market data from the marketplace
+	async function tradeSearch(item) {
+		let isSameItem = Item.checkSameItem(item, curItem);
+		// No need to fetch if exact same item selected and has already fetched
+		if (isSameItem) {
+			if (curItem.marketPriceAverage) {
+				setMarketPriceDiv(curItem);
+			}
+			else if (curItem.marketWaiting) {
+				return;
+			}
+		}
+		// New curItem, drop this one
+		else if (!isSameItem) {
+			return;
+		}
+
+		await item.setMarketData();
+
+		isSameItem = Item.checkSameItem(item, curItem);
+		// No need to fetch if exact same item selected and has already fetched
+		if (isSameItem) {
+			if (curItem.marketPriceAverage) {
+				setMarketPriceDiv(curItem);
+			}
+			else if (curItem.marketWaiting) {
+				return;
+			}
+		}
+		// New curItem, drop this one
+		else if (!isSameItem) {
+			return;
+		}
+
+		curItem = item;
+		item.setMarketPriceAverage();
 		setMarketPriceDiv(item);
 		return true;
 	}
 
 	function setMarketPriceDiv(item) {
-		if (!Item.checkSameItem(item, curItem)) {
+		if (!Item.checkSameItem(item, curItem) || !item.marketPriceAverage) {
 			return;
 		}
 

@@ -47,6 +47,8 @@
 
 		// The item's searchable name (for use fetching marketData)
 		marketName = null;
+		// Flag that shows this item is awaiting marketData
+		marketWaiting = false;
 		// Flash data fetched from backend
 		marketData = null;
 		// Calculated from `marketData`
@@ -136,6 +138,8 @@
 		}
 
 		async setMarketData() {
+			this.marketWaiting = true;
+
 			const callData = {
 				pagetime: window.userVars.pagetime,
 				tradezone: window.userVars.DFSTATS_df_tradezone,
@@ -151,6 +155,7 @@
 			const parsedMarketData = Item.parseFlashReturn(rawMarketData);
 			const filteredMarketData = Object.entries(parsedMarketData).filter(([key, value]) => value.itemname == this.name);
 			this.marketData = Object.fromEntries(filteredMarketData);
+			this.marketWaiting = false;
 		}
 
 		// Calculates and set the price average for this item
