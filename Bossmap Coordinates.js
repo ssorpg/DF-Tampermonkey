@@ -12,7 +12,6 @@
 
     $(document).on("ajaxSuccess", function(event, xhr, settings) {
         const responseJSON = JSON.parse(xhr.responseText);
-        console.log(responseJSON);
         if (responseJSON.bosshash && responseJSON[0]) {
             setTimeout(setup, 100);
         }
