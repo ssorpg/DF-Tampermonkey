@@ -16,16 +16,23 @@
         const bossTable = document.getElementById("boss-table");
         for (const tr of bossTable.firstElementChild.children) {
             for (const td of tr.children) {
-                td.addEventListener("click", (e) => setTimeout(setCoords(e), 0));
+                td.addEventListener("click", (e) => setTimeout(setCoordsDiv(e), 0));
             }
         }
     }
 
-    function setCoords(e) {
+    function setCoordsDiv(e) {
         const classNames = e.currentTarget.className.split(" ");
         const [, x, y] = classNames;
-        const coords = document.createElement("div");
-        document.getElementById("mission-info").prepend(coords);
-        coords.textContent = `${x}, ${y}`;
+
+        let coordsDiv = document.getElementById("ssorpg1_BossmapCoordinates");
+
+        if (!coordsDiv) {
+            coordsDiv = document.createElement("div");
+            coordsDiv.id = "ssorpg1_BossmapCoordinates";
+            document.getElementById("mission-info").prepend(coordsDiv);
+        }
+
+        coordsDiv.textContent = `${x}, ${y}`;
     }
 })();
