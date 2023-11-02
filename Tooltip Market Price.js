@@ -46,18 +46,13 @@
 		const newItem = new Item(window.curInfoItem);
 		const curItem = items[newItem.itemSelector];
 
-		if (!newItem.transferable) {
+		if (!newItem.transferable || (curItem && sameNameAlreadyFetched(curItem, newItem))) {
 			return;
 		}
-
-		// No need to fetch if same item selected and has already fetched
-		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
-			curItem.quantity = newItem.quantity;
-			setMarketPriceDiv(curItem);
-			return;
+		else if (!curItem) {
+			items[newItem.itemSelector] = newItem;
 		}
 
-		items[newItem.itemSelector] = newItem;
 		WebcallScheduler.enqueue(async () => await tradeSearch(newItem));
 	}
 
@@ -66,42 +61,30 @@
 		let newItem = new Item(window.curInfoItem);
 		const curItem = items[item.itemSelector];
 
-		// No need to fetch if same item selected and has already fetched
-		if (newItem && newItem.name == curItem.name) {
-			if (Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
-				curItem.quantity = newItem.quantity;
-				setMarketPriceDiv(curItem);
-				return;
-			}
-			else if (curItem.marketWaiting) {
-				return;
-			}
-		}
-		// New newItem, drop this one
-		else if (newItem.name != curItem.name) {
+		if (sameNameAlreadyFetched(curItem, newItem) || curItem.marketWaiting || curItem.name != newItem.name) {
 			return;
 		}
 
 		await curItem.setMarketData();
+		curItem.setMarketPriceAverage();
 
 		newItem = new Item(window.curInfoItem);
-		if (newItem && newItem.name == curItem.name) {
-			if (Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
-				curItem.quantity = newItem.quantity;
-				setMarketPriceDiv(curItem);
-				return;
-			}
-			else if (curItem.marketWaiting) {
-				return;
-			}
-		}
-		else if (newItem.name != curItem.name) {
-			return;
+
+		if (sameNameAlreadyFetched(curItem, newItem) || curItem.name != newItem.name) {
+			return true;
 		}
 
-		curItem.setMarketPriceAverage();
 		setMarketPriceDiv(curItem);
 		return true;
+	}
+
+	function sameNameAlreadyFetched(curItem, newItem) {
+		// No need to fetch if same item selected and has already fetched
+		if (curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
+			curItem.quantity = newItem.quantity;
+			setMarketPriceDiv(curItem);
+			return true;
+		}
 	}
 
 	function setMarketPriceDiv(curItem) {

@@ -60,7 +60,7 @@
 		const itemElement = window.curInfoItem;
 
 		// Copied from `inventory.js`
-		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes") || !itemElement) {
+		if (!itemElement || !(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
 			return;
 		}
 
