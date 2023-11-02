@@ -62,7 +62,7 @@
 			if (itemElementOrSelector instanceof HTMLElement) {
 				this.itemElement = itemElementOrSelector;
 				this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
-				this.itemNum = this.itemElement.parent.dataset.slot;
+				this.itemNum = this.itemElement.parentElement.dataset.slot;
 			}
 			else if (typeof itemElementOrSelector === "string") {
 				this.itemSelector = itemElementOrSelector;
