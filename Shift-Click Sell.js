@@ -47,7 +47,6 @@
 
 		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
 			curItem.quantity = newItem.quantity;
-			curItem.itemNum = newItem.itemNum;
 			sellItem(curItem);
 			return true;
 		}
@@ -59,7 +58,7 @@
 		return true;
 	}
 
-	// TODO: fix inventory bug when `enqueue`ing this
+	// TODO: fix inventory item swap bug when `enqueue`ing this
 	function sellItem(item) {
 		window.sellItem({
 			itemData: {
