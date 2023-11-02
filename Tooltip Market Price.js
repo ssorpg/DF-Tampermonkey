@@ -38,35 +38,6 @@
 	document.addEventListener("mousedown", (e) => dragging = true);
 	document.addEventListener("mouseup", (e) => dragging = false);
 
-	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
-	const gcDiv = document.getElementById("gamecontent");
-	if (gcDiv) {
-		const gcObserver = new MutationObserver((mutationList, observer) => {
-			if (window.marketScreen != "sell") {
-				return;
-			}
-
-			if (!curItem || !curItem.marketPriceAverage) {
-				return;
-			}
-
-			const moneyField = document.getElementsByClassName("moneyField");
-			if (moneyField.length == 0) {
-				return;
-			}
-
-			// Price field
-			const quantity = curItem.category == "credits" ? Item.DEFAULT_CREDIT_AMOUNT : curItem.quantity;
-			moneyField[0].value = Math.round(curItem.marketPriceAverage * quantity);
-
-			// `Yes` button
-			gcDiv.children[2].disabled = false;
-		});
-
-		// Waits for child additions or removals and calls the above function
-		gcObserver.observe(gcDiv, { childList: true });
-	}
-
 	function setNextItem() {
 		if (dragging || !window.curInfoItem) {
 			return;
@@ -79,7 +50,7 @@
 			return;
 		}
 
-		// No need to fetch if exact same item selected and has already fetched
+		// No need to fetch if same item selected and has already fetched
 		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
 			curItem.quantity = newItem.quantity;
 			setMarketPriceDiv(curItem);
@@ -97,9 +68,10 @@
 
 		// No need to fetch if same item selected and has already fetched
 		if (newItem && newItem.name == curItem.name) {
-			if (curItem.marketPriceAverage) {
+			if (Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
 				curItem.quantity = newItem.quantity;
 				setMarketPriceDiv(curItem);
+				return;
 			}
 			else if (curItem.marketWaiting) {
 				return;
@@ -114,9 +86,10 @@
 
 		newItem = new Item(window.curInfoItem);
 		if (newItem && newItem.name == curItem.name) {
-			if (curItem.marketPriceAverage) {
+			if (Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
 				curItem.quantity = newItem.quantity;
 				setMarketPriceDiv(curItem);
+				return;
 			}
 			else if (curItem.marketWaiting) {
 				return;

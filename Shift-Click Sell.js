@@ -17,17 +17,21 @@
 	window.ssorpg1.items ??= {};
 	const { items, Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
+	const slotQueue = [];
+
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
 		if (window.marketScreen != "sell" || !e.shiftKey) {
 			return;
 		}
 
 		// Save to variable so we don't lose it
-		const itemElement = e.currentTarget.firstChild;
-		WebcallScheduler.enqueue(async () => await tradeSearch(itemElement));
+		const currentTarget = e.currentTarget;
+		WebcallScheduler.enqueue(async () => await tradeSearch(currentTarget));
 	}));
 
-	async function tradeSearch(itemElement) {
+	async function tradeSearch(currentTarget) {
+		const itemElement = currentTarget.firstChild;
+
 		if (window.marketScreen != "sell" || !itemElement) {
 			return;
 		}
@@ -35,9 +39,11 @@
 		const newItem = new Item(itemElement);
 		const curItem = items[newItem.itemSelector];
 
-		if (!newItem.itemNum || !newItem.transferable) {
+		if (!newItem.transferable) {
 			return;
 		}
+
+		slotQueue.push(currentTarget.dataset.slot);
 
 		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
 			curItem.quantity = newItem.quantity;
@@ -57,7 +63,7 @@
 	function sellItem(item) {
 		window.sellItem({
 			itemData: {
-				0: item.itemNum,
+				0: slotQueue.shift(),
 				1: item.itemSelector
 			},
 			2: Math.ceil(item.quantity * item.marketPriceAverage)
