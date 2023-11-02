@@ -53,6 +53,7 @@
 
 		await newItem.setMarketData();
 		newItem.setMarketPriceAverage();
+
 		items[newItem.itemSelector] = newItem;
 		sellItem(newItem);
 		return true;
