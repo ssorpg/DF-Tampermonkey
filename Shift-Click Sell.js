@@ -14,9 +14,8 @@
 (function() {
 	"use strict";
 
-	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
-
-	let items = {};
+	window.ssorpg1.items ??= {};
+	const { items, Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
 		if (window.marketScreen != "sell" || !e.shiftKey) {
@@ -34,31 +33,34 @@
 		}
 
 		const newItem = new Item(itemElement);
-		const { itemSelector } = newItem;
-		const item = items[itemSelector];
+		const curItem = items[newItem.itemSelector];
 
-		if (item && item.name == newItem.name && Item.checkExpiredPrice(item) && item.marketPriceAverage) {
-			items[itemSelector].quantity = item.quantity;
-			WebcallScheduler.enqueue(() => sellItem(items[itemSelector]));
+		if (!newItem.itemNum || !newItem.transferable) {
 			return;
+		}
+
+		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
+			curItem.quantity = newItem.quantity;
+			curItem.itemNum = newItem.itemNum;
+			sellItem(curItem);
+			return true;
 		}
 
 		await newItem.setMarketData();
 		newItem.setMarketPriceAverage();
-		items[itemSelector] = newItem;
-		WebcallScheduler.enqueue(() => sellItem(items[itemSelector]));
+		items[newItem.itemSelector] = newItem;
+		sellItem(newItem);
 		return true;
 	}
 
+	// TODO: fix inventory bug when `enqueue`ing this
 	function sellItem(item) {
 		window.sellItem({
 			itemData: {
-				0: item.quantity,
+				0: item.itemNum,
 				1: item.itemSelector
 			},
-			2: Math.ceil(item.quantity * item.marketPriceAverage),
-			3: item.itemNum
+			2: Math.ceil(item.quantity * item.marketPriceAverage)
 		});
-		return true;
 	}
 })();

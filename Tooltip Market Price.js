@@ -20,12 +20,8 @@
 		return;
 	}
 
-	const { Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
-
-	const DEBOUNCE_TIME = 50;
-
-	let curItem = null;
-	let debounceTimeout = null;
+	window.ssorpg1.items ??= {};
+	const { items, Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
 
 	const newEventListenerParams = {
 		element: window.inventoryHolder,
@@ -72,80 +68,74 @@
 	}
 
 	function setNextItem() {
-		clearTimeout(debounceTimeout);
-
 		if (dragging || !window.curInfoItem) {
 			return;
 		}
 
-		const item = new Item(window.curInfoItem);
+		const newItem = new Item(window.curInfoItem);
+		const curItem = items[newItem.itemSelector];
 
-		if (!item.transferable) {
+		if (!newItem.transferable) {
 			return;
 		}
 
 		// No need to fetch if exact same item selected and has already fetched
-		if (Item.checkSameItem(item, curItem) && curItem.marketPriceAverage) {
+		if (curItem && curItem.name == newItem.name && Item.checkExpiredPrice(curItem) && curItem.marketPriceAverage) {
+			curItem.quantity = newItem.quantity;
 			setMarketPriceDiv(curItem);
 			return;
 		}
 
-		// Credits override
-		if (item.category == "credits") {
-			item.name = "1 Credits";
-		}
-
-		curItem = item;
-		debounceTimeout = setTimeout(() => WebcallScheduler.enqueue(async () => await tradeSearch(item)), DEBOUNCE_TIME);
+		items[newItem.itemSelector] = newItem;
+		WebcallScheduler.enqueue(async () => await tradeSearch(newItem));
 	}
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
-		let isSameItem = Item.checkSameItem(item, curItem);
-		// No need to fetch if exact same item selected and has already fetched
-		if (isSameItem) {
+		let newItem = new Item(window.curInfoItem);
+		const curItem = items[item.itemSelector];
+
+		// No need to fetch if same item selected and has already fetched
+		if (newItem && newItem.name == curItem.name) {
 			if (curItem.marketPriceAverage) {
+				curItem.quantity = newItem.quantity;
 				setMarketPriceDiv(curItem);
 			}
 			else if (curItem.marketWaiting) {
 				return;
 			}
 		}
-		// New curItem, drop this one
-		else if (!isSameItem) {
+		// New newItem, drop this one
+		else if (newItem.name != curItem.name) {
 			return;
 		}
 
-		await item.setMarketData();
+		await curItem.setMarketData();
 
-		isSameItem = Item.checkSameItem(item, curItem);
-		if (isSameItem) {
+		newItem = new Item(window.curInfoItem);
+		if (newItem && newItem.name == curItem.name) {
 			if (curItem.marketPriceAverage) {
+				curItem.quantity = newItem.quantity;
 				setMarketPriceDiv(curItem);
 			}
 			else if (curItem.marketWaiting) {
 				return;
 			}
 		}
-		else if (!isSameItem) {
+		else if (newItem.name != curItem.name) {
 			return;
 		}
 
-		curItem = item;
-		item.setMarketPriceAverage();
-		setMarketPriceDiv(item);
+		curItem.setMarketPriceAverage();
+		setMarketPriceDiv(curItem);
 		return true;
 	}
 
-	function setMarketPriceDiv(item) {
-		if (!Item.checkSameItem(item, curItem) || !item.marketPriceAverage) {
-			return;
-		}
-
+	function setMarketPriceDiv(curItem) {
 		const { marketPriceDiv } = DOMEditor.createTooltipDiv();
 		marketPriceDiv.textContent = "Est. market price: $"
-			+ Math.round(item.marketPriceAverage * (item.stackable ? item.quantity : 1)).toLocaleString()
-			+ (item.stackable ? `\r\n($${Helpers.roundToTwo(item.marketPriceAverage).toLocaleString()} ea)` : "");
+			+ Math.round(curItem.marketPriceAverage * (curItem.stackable ? curItem.quantity : 1)).toLocaleString()
+			+ (curItem.stackable ? `\r\n($${Helpers.roundToTwo(curItem.marketPriceAverage).toLocaleString()} ea)` : "");
 		DOMEditor.infoBoxCorrection();
 	}
 })();

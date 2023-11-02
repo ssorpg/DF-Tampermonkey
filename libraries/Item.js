@@ -30,12 +30,12 @@
 		// Item inventory slot number
 		itemNum = null;
 
+		// Item category (ammo, armor, etc)
+		category = null;
 		// Color of the item
 		color = null;
 		// Display name of the item (without color)
 		name = null;
-		// Item category (ammo, armor, etc)
-		category = null;
 		// Can this item be stacked?
 		stackable = false;
 		// "Real" quantity of the item
@@ -62,7 +62,7 @@
 			if (itemElementOrSelector instanceof HTMLElement) {
 				this.itemElement = itemElementOrSelector;
 				this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
-				this.itemNum = this.itemElement.parentElement.dataset.slot;
+				this.itemNum = this.itemElement.parentElement?.dataset.slot;
 			}
 			else if (typeof itemElementOrSelector === "string") {
 				this.itemSelector = itemElementOrSelector;
@@ -74,8 +74,8 @@
 			this._setItemData();
 			this._setItemQuantity();
 
-			this._setColorAndName();
 			this._setCategory();
+			this._setColorAndName();
 			this._setStackable();
 			this._setQuantity();
 			this._setTransferable();
@@ -93,18 +93,23 @@
 			this.itemQuantity = this.itemElement ? this.itemElement.dataset.quantity : 1;
 		}
 
+		_setCategory() {
+			this.category = this.itemData.itemcat;
+		}
+
 		// Seperates clothing colors from item name
 		_setColorAndName() {
+			if (this.category == "credits") {
+				this.name = "1 Credits";
+				return;
+			}
+
 			const nameAsArr = window.itemNamer(this.itemSelector, this.itemQuantity).split(" ");
 			if (this.itemData.othercolours?.includes(nameAsArr[0])) {
 				this.color = nameAsArr.shift();
 			}
 
 			this.name = nameAsArr.join(" ");
-		}
-
-		_setCategory() {
-			this.category = this.itemData.itemcat;
 		}
 
 		_setStackable() {
