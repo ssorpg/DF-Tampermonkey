@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name		Interface Fixer
+// @name		Interface Fixes
 // @grant		none
 // @version		1.0
 // @description	Fixes various interface bugs
