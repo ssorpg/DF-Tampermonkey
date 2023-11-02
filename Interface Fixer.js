@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name		Tooltip Fixer
+// @name		Interface Fixer
 // @grant		none
 // @version		1.0
-// @description	Fixes various tooltip bugs
+// @description	Fixes various interface bugs
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
