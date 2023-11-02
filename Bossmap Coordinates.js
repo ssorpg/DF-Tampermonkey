@@ -8,7 +8,7 @@
 // ==/UserScript==
 
 (function() {
-    "user strict";
+    "use strict";
 
     $(document).on("ajaxSuccess", function(event, xhr, settings) {
         const responseJSON = JSON.parse(xhr.responseText);
