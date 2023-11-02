@@ -59,12 +59,8 @@
 	function getCraftingMaterials() {
 		const itemElement = window.curInfoItem;
 
-		if (!itemElement) {
-			return;
-		}
-
 		// Copied from `inventory.js`
-		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
+		if (!(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes") || !itemElement) {
 			return;
 		}
 

@@ -53,6 +53,8 @@
 		marketData = null;
 		// Calculated from `marketData`
 		marketPriceAverage = null;
+		// The time after which this object's `marketPriceAverage` needs to be fetched again
+		marketPriceExpiration = null;
 
 		constructor(itemElementOrSelector) {
 			if (itemElementOrSelector instanceof HTMLElement) {
@@ -156,6 +158,7 @@
 			const filteredMarketData = Object.entries(parsedMarketData).filter(([key, value]) => value.itemname == this.name);
 			this.marketData = Object.fromEntries(filteredMarketData);
 			this.marketWaiting = false;
+			this.marketPriceExpiration = Date.now() + Item.EXPIRATION_TIME;
 		}
 
 		// Calculates and set the price average for this item
@@ -167,7 +170,13 @@
 			let marketPriceSum = 0;
 			let counter = 0;
 			for (const [key, value] of Object.entries(this.marketData)) {
-				const { price, quantity } = value;
+				const { price, quantity, id_member } = value;
+
+				// Don't consider prices from the same user
+				if (id_member == window.userID) {
+					continue;
+				}
+
 				const _quantity = this.stackable ? Number(quantity) : 1;
 				marketPriceSum += Number(price) / _quantity;
 
@@ -202,6 +211,10 @@
 		return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
 	}
 
+	Item.checkExpiredPrice = function(item) {
+		return Date.now() < item.marketPriceExpiration;
+	}
+
 	Item.nameToSelector = function(name) {
 		const nameAsArr = name.split(" ");
 		if (Item.COLORS.includes(nameAsArr[0])) {
@@ -211,9 +224,10 @@
 		return nameAsArr.join("").replace("-", "").toLowerCase();
 	}
 
-	Item.MAX_PRICES_TO_AVERAGE = 5;
-	Item.MAX_MARKET_NAME = 20;
-	Item.DEFAULT_CREDIT_AMOUNT = 100;
+	Item.MAX_PRICES_TO_AVERAGE = 5;		// Average at-most 5 prices
+	Item.MAX_MARKET_NAME = 20;			// 20 char limit
+	Item.DEFAULT_CREDIT_AMOUNT = 100;	// 100 credits
+	Item.EXPIRATION_TIME = 20000;		// 20 seconds
 
 	window.ssorpg1.Item = Item;
 })();

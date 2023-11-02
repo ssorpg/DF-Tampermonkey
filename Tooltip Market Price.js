@@ -32,18 +32,15 @@
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
-		functionAfter: setNextItem_Hover
+		functionAfter: setNextItem
 	};
 
 	DOMEditor.replaceEventListener(newEventListenerParams);
 
-	// When dragging and dropping, setNextItem only once
+	// Disabled when dragging and dropping
 	let dragging = false;
 	document.addEventListener("mousedown", (e) => dragging = true);
 	document.addEventListener("mouseup", (e) => dragging = false);
-
-	// Forces a tooltip update when dragging
-	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", async (e) => await setNextItem_Drag(e.currentTarget.firstChild)));
 
 	// TODO: replace `SellMenuItemPopulate` function instead of watching for changes to DOM
 	const gcDiv = document.getElementById("gamecontent");
@@ -74,15 +71,10 @@
 		gcObserver.observe(gcDiv, { childList: true });
 	}
 
-	function setNextItem_Hover() {
+	function setNextItem() {
 		clearTimeout(debounceTimeout);
 
-		if (dragging) {
-			return;
-		}
-
-		// No item hovered
-		if (!window.curInfoItem) {
+		if (dragging || !window.curInfoItem) {
 			return;
 		}
 
@@ -107,34 +99,6 @@
 		debounceTimeout = setTimeout(() => WebcallScheduler.enqueue(async () => await tradeSearch(item)), DEBOUNCE_TIME);
 	}
 
-	async function setNextItem_Drag(itemElement) {
-		window.curInfoItem = itemElement;
-
-		// No item hovered
-		if (!window.curInfoItem) {
-			return;
-		}
-
-		const item = new Item(window.curInfoItem);
-
-		if (!item.transferable) {
-			return;
-		}
-
-		// No need to fetch if exact same item selected and has already fetched
-		if (Item.checkSameItem(item, curItem) && curItem.marketPriceAverage) {
-			return;
-		}
-
-		// Credits override
-		if (item.category == "credits") {
-			item.name = "1 Credits";
-		}
-
-		curItem = item;
-		await tradeSearch(item);
-	}
-
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
 		let isSameItem = Item.checkSameItem(item, curItem);
@@ -155,7 +119,6 @@
 		await item.setMarketData();
 
 		isSameItem = Item.checkSameItem(item, curItem);
-		// No need to fetch if exact same item selected and has already fetched
 		if (isSameItem) {
 			if (curItem.marketPriceAverage) {
 				setMarketPriceDiv(curItem);
@@ -164,7 +127,6 @@
 				return;
 			}
 		}
-		// New curItem, drop this one
 		else if (!isSameItem) {
 			return;
 		}

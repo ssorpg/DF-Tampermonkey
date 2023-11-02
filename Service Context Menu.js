@@ -21,11 +21,7 @@
 
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("contextmenu", openContextMenu));
 	document.addEventListener("mousedown", () => {
-		if (!contextMenu) {
-			return;
-		}
-
-		if (mouseIsOverContextMenu) {
+		if (!contextMenu || mouseIsOverContextMenu) {
 			return;
 		}
 
@@ -33,20 +29,15 @@
 	});
 
 	function openContextMenu(e) {
-		if (window.marketScreen != "buy") {
+		e.preventDefault();
+		const itemElement = e.currentTarget.firstChild;
+
+		if (window.marketScreen != "buy" || !itemElement) {
 			return;
 		}
 
 		if (contextMenu) {
 			contextMenu.remove();
-		}
-
-		e.preventDefault();
-
-		const itemElement = e.currentTarget.firstChild;
-
-		if (!itemElement) {
-			return;
 		}
 
 		const item = new Item(itemElement);

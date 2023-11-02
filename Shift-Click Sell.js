@@ -16,8 +16,10 @@
 
 	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
 
+	let items = {};
+
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
-		if (window.marketScreen != "buy" || !e.shiftKey) {
+		if (window.marketScreen != "sell" || !e.shiftKey) {
 			return;
 		}
 
@@ -27,25 +29,27 @@
 	}));
 
 	async function tradeSearch(itemElement) {
-		if (window.marketScreen != "buy" || !itemElement) {
+		if (window.marketScreen != "sell" || !itemElement) {
 			return;
 		}
 
-		const item = new Item(itemElement);
-		const {
-			searchField,
-			categoryChoice,
-			cat,
-			makeSearch
-		} = DOMEditor.getTradeSearchElements();
+		const newItem = new Item(itemElement);
+		const { itemSelector } = newItem;
+		const item = items[itemSelector];
 
-		searchField.value = item.marketName;
-		categoryChoice.dataset.catname = "";
-		categoryChoice.dataset.cattype = "";
-		cat.textContent = "Everything";
-		makeSearch.disabled = false;
+		if (item.name == newItem.name && Item.checkExpiredPrice(item) && item.marketPriceAverage) {
+			items[itemSelector].quantity = item.quantity;
+			sellItem(items[itemSelector]);
+			return;
+		}
 
-		window.search();
+		await item.setMarketData();
+		items[itemSelector] = item;
+		sellItem(items[itemSelector]);
 		return true;
+	}
+
+	function sellItem(item) {
+		console.log(item);
 	}
 })();
