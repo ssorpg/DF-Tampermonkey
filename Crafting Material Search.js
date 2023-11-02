@@ -95,7 +95,7 @@
 				cat.textContent = SELECTION;
 				searchDropdown.dataset.selection = SELECTION;
 				toggleDropdown();
-				// Update recipe list here
+				// TODO: update recipe list here
 			});
 			selection.addEventListener("mouseenter", () => selection.style.backgroundColor = "#333333");
 			selection.addEventListener("mouseleave", () => selection.style.backgroundColor = "");
@@ -116,6 +116,9 @@
 
 			searchDropdownOpen = !searchDropdownOpen;
 		}
+
+		// TODO: replace event listener for searchBar, add event listener for searchDropdown
+		// TODO: search algorithms for name, materials, category
 	}
 
 	function searchDropdownStyle(searchDropdown) {
