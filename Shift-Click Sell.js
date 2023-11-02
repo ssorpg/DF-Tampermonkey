@@ -54,7 +54,7 @@
 		window.sellItem({
 			itemData: {
 				0: item.quantity,
-				1: item.type
+				1: item.itemSelector
 			},
 			2: Math.ceil(item.quantity * item.marketPriceAverage),
 			3: item.itemNum
