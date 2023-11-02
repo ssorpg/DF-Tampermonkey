@@ -27,6 +27,8 @@
 		itemData = null;
 		// The item's stated quantity (only relevant if constructed from an element)
 		itemQuantity = null;
+		// Item inventory slot number
+		itemNum = null;
 
 		// Color of the item
 		color = null;
@@ -60,6 +62,7 @@
 			if (itemElementOrSelector instanceof HTMLElement) {
 				this.itemElement = itemElementOrSelector;
 				this.itemSelector = (this.itemElement.dataset.type.trim().split("_"))[0];
+				this.itemNum = this.itemElement.dataset.slot;
 			}
 			else if (typeof itemElementOrSelector === "string") {
 				this.itemSelector = itemElementOrSelector;

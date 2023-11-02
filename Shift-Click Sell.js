@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name		Shift-Click Search
+// @name		Shift-Click Sell
 // @grant		none
 // @version		1.0
-// @description	Allows the user to shift-click an item on the marketplace screen to search for it
+// @description	Allows the user to shift-click an item on the marketplace screen to sell it
 // @author		ssorpg1
 // @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
 // @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
@@ -37,19 +37,28 @@
 		const { itemSelector } = newItem;
 		const item = items[itemSelector];
 
-		if (item.name == newItem.name && Item.checkExpiredPrice(item) && item.marketPriceAverage) {
+		if (item && item.name == newItem.name && Item.checkExpiredPrice(item) && item.marketPriceAverage) {
 			items[itemSelector].quantity = item.quantity;
-			sellItem(items[itemSelector]);
+			WebcallScheduler.enqueue(() => sellItem(items[itemSelector]));
 			return;
 		}
 
-		await item.setMarketData();
-		items[itemSelector] = item;
-		sellItem(items[itemSelector]);
+		await newItem.setMarketData();
+		newItem.setMarketPriceAverage();
+		items[itemSelector] = newItem;
+		WebcallScheduler.enqueue(() => sellItem(items[itemSelector]));
 		return true;
 	}
 
 	function sellItem(item) {
-		console.log(item);
+		window.sellItem({
+			itemData: {
+				0: item.quantity,
+				1: item.type
+			},
+			2: Math.ceil(item.quantity * item.marketPriceAverage),
+			3: item.itemNum
+		});
+		return true;
 	}
 })();
