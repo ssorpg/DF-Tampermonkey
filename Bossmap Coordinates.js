@@ -10,6 +10,7 @@
 (function() {
     "use strict";
 
+    // Attach to AJAX response successes
     $(document).on("ajaxSuccess", function(event, xhr, settings) {
         const responseJSON = JSON.parse(xhr.responseText);
         if (responseJSON.bosshash && responseJSON[0]) {
@@ -17,6 +18,7 @@
         }
     });
 
+    // Add an event listener to each cell in the table
     function setup() {
         const bossTable = document.getElementById("boss-table");
         for (const tr of bossTable.firstElementChild.children) {
@@ -26,6 +28,7 @@
         }
     }
 
+    // Sets coordinates in the `mission-info` div
     function setCoordsDiv(e) {
         const classNames = e.currentTarget.className.split(" ");
         const [, x, y] = classNames;
