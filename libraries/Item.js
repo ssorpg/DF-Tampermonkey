@@ -19,33 +19,33 @@
 	}
 
 	class Item {
-		// The element this Item was constructed from
+		// The element this item was constructed from
 		itemElement = null;
 		// A string which can be used to select itemData `window.globalData`
 		itemSelector = null;
 		// Its data from `window.globalData`
 		itemData = null;
-		// The item's stated quantity (only relevant if constructed from an element)
+		// The quantity of the item
 		itemQuantity = null;
 
 		// Item category (ammo, armor, etc)
 		category = null;
-		// Color of the item
+		// Color of the item (for clothing/armor)
 		color = null;
-		// Display name of the item (without color)
+		// Display name of the item without color
 		name = null;
 		// Can this item be stacked?
 		stackable = false;
-		// "Real" quantity of the item
+		// The quantity of the item, capped to 1 for armor and credits
 		quantity = null;
 		// Can this item be transfered?
 		transferable = true;
-		// Dollar value for scrapping
+		// Dollar value when scrapping
 		scrapValue = null;
 		// Materials required to craft
 		craftingMaterials = null;
 
-		// The item's searchable name (for use fetching marketData)
+		// Display name of the item without color, capped to 20 characters
 		marketName = null;
 		// Flag that shows this item is awaiting marketData
 		marketWaiting = false;
@@ -53,7 +53,7 @@
 		marketData = null;
 		// Calculated from `marketData`
 		marketPriceAverage = null;
-		// The time after which this object's `marketPriceAverage` needs to be fetched again
+		// The time after which this object's `marketPriceAverage` needs to be calculated again
 		marketPriceExpiration = null;
 
 		constructor(itemElementOrSelector) {
@@ -94,7 +94,7 @@
 			this.category = this.itemData.itemcat;
 		}
 
-		// Seperates clothing colors from item name
+		// Seperates clothing colors from item display name
 		_setColorAndName() {
 			if (this.category == "credits") {
 				this.name = "1 Credits";
@@ -144,6 +144,7 @@
 			this.marketName = this.name.length >= Item.MAX_MARKET_NAME ? this.name.substr(0, Item.MAX_MARKET_NAME) : this.name;
 		}
 
+		// Fetches and parses market data
 		async setMarketData() {
 			this.marketWaiting = true;
 
@@ -166,7 +167,7 @@
 			this.marketPriceExpiration = Date.now() + Item.EXPIRATION_TIME;
 		}
 
-		// Calculates and set the price average for this item
+		// Calculates and sets the price average for this item
 		setMarketPriceAverage() {
 			if (!this.marketData) {
 				return;
@@ -199,6 +200,7 @@
 		}
 	}
 
+	// Parses flash returns from server
 	Item.parseFlashReturn = function(flash) {
 		const flashAsObj = {};
 		const flashMatches = flash.trim().matchAll(/([a-z]*_*[a-z]+)_*([0-9]+)_(.*?)=(.*?)(?:&|$)/gi);
@@ -212,21 +214,9 @@
 		return flashAsObj;
 	}
 
-	Item.checkSameItem = function(item1, item2) {
-		return (item1 && item2 && item1.name == item2.name && item1.quantity == item2.quantity);
-	}
-
+	// Checks whether this item needs to recalculate its price average
 	Item.checkExpiredPrice = function(item) {
 		return Date.now() < item.marketPriceExpiration;
-	}
-
-	Item.nameToSelector = function(name) {
-		const nameAsArr = name.split(" ");
-		if (Item.COLORS.includes(nameAsArr[0])) {
-			nameAsArr.shift();
-		}
-
-		return nameAsArr.join("").replace("-", "").toLowerCase();
 	}
 
 	Item.MAX_PRICES_TO_AVERAGE = 5;		// Average at-most 5 prices
