@@ -74,6 +74,7 @@
 			this._setItemQuantity();
 
 			this._setCategory();
+			this._setCooked();
 			this._setColorAndName();
 			this._setStackable();
 			this._setQuantity();
