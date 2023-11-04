@@ -22,7 +22,7 @@
 			craftingObserver.disconnect();
 		}
 	});
-	
+
 	// Start observing
 	craftingObserver.observe(document.body, {
 		childList: true,

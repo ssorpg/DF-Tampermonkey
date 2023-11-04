@@ -37,7 +37,7 @@
 		}
 
 		const newItem = new Item(itemElement);
-		const curItem = items[newItem.itemSelector];
+		const curItem = items[newItem._getItemSelector()];
 
 		if (!newItem.transferable) {
 			return;
@@ -54,7 +54,7 @@
 		await newItem.setMarketData();
 		newItem.setMarketPriceAverage();
 
-		items[newItem.itemSelector] = newItem;
+		items[newItem._getItemSelector()] = newItem;
 		sellItem(newItem);
 		return true;
 	}
@@ -64,7 +64,7 @@
 		window.sellItem({
 			itemData: {
 				0: slotQueue.shift(),
-				1: item.itemSelector
+				1: item._getItemSelector()
 			},
 			2: Math.ceil(item.quantity * item.marketPriceAverage)
 		});

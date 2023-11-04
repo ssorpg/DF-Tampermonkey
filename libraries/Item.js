@@ -34,6 +34,8 @@
 		color = null;
 		// Display name of the item (without color)
 		name = null;
+		// Whether the item has been cooked or not
+		cooked = false;
 		// Can this item be stacked?
 		stackable = false;
 		// "Real" quantity of the item
@@ -82,6 +84,10 @@
 			this._setMarketName();
 		}
 
+		_getItemSelector() {
+			return this.itemSelector + (this.cooked ? "_cooked" : "");
+		}
+
 		_setItemData() {
 			this.itemData = window.globalData[this.itemSelector];
 		}
@@ -92,6 +98,10 @@
 
 		_setCategory() {
 			this.category = this.itemData.itemcat;
+		}
+
+		_setCooked() {
+			this.cooked = this.itemElement.dataset.type.includes("_cooked");
 		}
 
 		// Seperates clothing colors from item name
@@ -106,7 +116,7 @@
 				this.color = nameAsArr.shift();
 			}
 
-			this.name = nameAsArr.join(" ");
+			this.name = (this.cooked ? "Cooked " : "") + nameAsArr.join(" ");
 		}
 
 		_setStackable() {
