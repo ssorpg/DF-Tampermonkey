@@ -19,14 +19,17 @@
 	}
 
 	class DOMEditor {
+		// On personal message page
 		getMessagesTable() {
 			return document.getElementsByName("stratoV5_TBLS_01")[0].closest("table");
 		}
 
+		// On all pages
 		getMainMenuBottom() {
 			return document.querySelector("*[background='https://files.deadfrontier.com/deadfrontier/DF3Dimages/mainpage/menu_bottom.jpg']").parentElement;
 		}
 
+		// Gets every inventory cell on pages with an inventory
 		getInventoryCells() {
 			return Array.from(document.getElementById("inventory").children).flatMap((row) => Array.from(row.children));
 		}
@@ -41,6 +44,7 @@
 			}
 		}
 
+		// Custom tooltip div
 		// TODO: refactor
 		createTooltipDiv() {
 			let tooltipDiv = document.getElementById("ssorpg1_TooltipDiv");
@@ -112,7 +116,7 @@
 			}
 		}
 
-		// Corrects the location of the infoBox when new information is appended
+		// Corrects the location of the `infoBox` when new information is appended
 		// Copied from `inventory.js`
 		infoBoxCorrection() {
 			const { inventoryHolder, mousePos, infoBox } = window;
@@ -133,7 +137,7 @@
 			}
 		}
 
-		// Corrects the location of the services contextMenu
+		// Corrects the location of the `contextMenu`
 		// Copied from `market.js`
 		contextMenuCorrection(contextMenu) {
 			const { inventoryHolder, mousePos } = window;
