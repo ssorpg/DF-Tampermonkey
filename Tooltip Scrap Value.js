@@ -18,10 +18,11 @@
 		return;
 	}
 
-	const { Item, DOMEditor } = window.ssorpg1;
+	const { ssorpg1, curInfoItem } = window;
+	const { Item, DOMEditor } = ssorpg1;
 
 	const newEventListenerParams = {
-		element: window.inventoryHolder,
+		element: inventoryHolder,
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
@@ -31,7 +32,7 @@
 	DOMEditor.replaceEventListener(newEventListenerParams);
 
 	function setScrapValueDiv() {
-		const itemElement = window.curInfoItem;
+		const itemElement = curInfoItem;
 
 		if (!itemElement) {
 			return;

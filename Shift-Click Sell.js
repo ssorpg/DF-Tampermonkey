@@ -15,12 +15,13 @@
 	"use strict";
 
 	window.ssorpg1.items ??= {};
-	const { items, Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	const { ssorpg1, marketScreen, sellItem } = window;
+	const { items, Item, DOMEditor, WebcallScheduler } = ssorpg1;
 
 	const slotQueue = [];
 
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
-		if (window.marketScreen != "sell" || !e.shiftKey) {
+		if (marketScreen != "sell" || !e.shiftKey) {
 			return;
 		}
 
@@ -32,7 +33,7 @@
 	async function tradeSearch(currentTarget) {
 		const itemElement = currentTarget.firstChild;
 
-		if (window.marketScreen != "sell" || !itemElement) {
+		if (marketScreen != "sell" || !itemElement) {
 			return;
 		}
 
@@ -61,7 +62,7 @@
 
 	// TODO: fix inventory item swap bug when `enqueue`ing this
 	function sellItem(item) {
-		window.sellItem({
+		sellItem({
 			itemData: {
 				0: slotQueue.shift(),
 				1: item._getItemSelector()

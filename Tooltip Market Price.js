@@ -21,10 +21,11 @@
 	}
 
 	window.ssorpg1.items ??= {};
-	const { items, Item, DOMEditor, WebcallScheduler, Helpers } = window.ssorpg1;
+	const { ssorpg1, inventoryHolder, curInfoItem } = window;
+	const { items, Item, DOMEditor, WebcallScheduler, Helpers } = ssorpg1;
 
 	const newEventListenerParams = {
-		element: window.inventoryHolder,
+		element: inventoryHolder,
 		event: "mousemove",
 		functionName: "infoCard",
 		functionBefore: null,
@@ -39,11 +40,11 @@
 	document.addEventListener("mouseup", (e) => dragging = false);
 
 	function setNextItem() {
-		if (dragging || !window.curInfoItem) {
+		if (dragging || !curInfoItem) {
 			return;
 		}
 
-		const newItem = new Item(window.curInfoItem);
+		const newItem = new Item(curInfoItem);
 		const curItem = items[newItem.itemSelector];
 
 		if (!newItem.transferable || (curItem && sameNameAlreadyFetched(curItem, newItem))) {
@@ -58,7 +59,7 @@
 
 	// Fetches an item's market data from the marketplace
 	async function tradeSearch(item) {
-		let newItem = new Item(window.curInfoItem);
+		let newItem = new Item(curInfoItem);
 		const curItem = items[item.itemSelector];
 
 		if (sameNameAlreadyFetched(curItem, newItem) || curItem.marketWaiting || curItem.name != newItem.name) {
@@ -68,7 +69,7 @@
 		await curItem.setMarketData();
 		curItem.setMarketPriceAverage();
 
-		newItem = new Item(window.curInfoItem);
+		newItem = new Item(curInfoItem);
 
 		if (sameNameAlreadyFetched(curItem, newItem) || curItem.name != newItem.name) {
 			return true;

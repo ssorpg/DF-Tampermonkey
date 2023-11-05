@@ -15,7 +15,8 @@
 (function() {
 	"use strict";
 
-	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	const { ssorpg1, userVars, webCall, inventoryHolder, curInfoItem } = window;
+	const { Item, DOMEditor, WebcallScheduler } = ssorpg1;
 
 	const storage = {};
 
@@ -23,14 +24,14 @@
 
 	async function getStorage() {
 		const callData = {
-			pagetime: window.userVars.pagetime,
-			sc: window.userVars.sc,
-			userID: window.userVars.userID,
-			password: window.userVars.password
+			pagetime: userVars.pagetime,
+			sc: userVars.sc,
+			userID: userVars.userID,
+			password: userVars.password
 		};
 	
 		// Get and convert the storage data to an object
-		const storageData = await new Promise((resolve) => window.webCall("get_storage", callData, resolve, true));
+		const storageData = await new Promise((resolve) => webCall("get_storage", callData, resolve, true));
 		const parsedStorageData = Item.parseFlashReturn(storageData);
 
 		// Count how many of each item we have in storage
@@ -45,7 +46,7 @@
 		}
 
 		const newEventListenerParams = {
-			element: window.inventoryHolder,
+			element: inventoryHolder,
 			event: "mousemove",
 			functionName: "infoCard",
 			functionBefore: null,
@@ -57,7 +58,7 @@
 	}
 
 	function getCraftingMaterials() {
-		const itemElement = window.curInfoItem;
+		const itemElement = curInfoItem;
 
 		// Copied from `inventory.js`
 		if (!itemElement || !(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {

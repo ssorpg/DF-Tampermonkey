@@ -47,6 +47,17 @@
 		// Materials required to craft
 		craftingMaterials = null;
 
+		// Type of service to be provided for this item
+		serviceType = null;
+		// For use with service webcalls
+		serviceAction = null;
+		// Level required for service to be provided for this item
+		serviceLevel = null;
+		// Flag that shows this item is awaiting serviceData
+		serviceWaiting = false;
+		// Flash data fetched from backend
+		serviceData = null;
+
 		// Item display name without color, capped to 20 characters
 		marketName = null;
 		// Flag that shows this item is awaiting marketData
@@ -81,6 +92,8 @@
 			this._setTransferable();
 			this._setScrapValue();
 			this._setCraftingMaterials();
+
+			this._setServiceInfo();
 
 			this._setMarketName();
 		}
@@ -151,17 +164,61 @@
 			}
 		}
 
+		_setServiceInfo() {
+			if (this.category == "armour" && this.itemQuantity < Number(this.itemData.hp)) {
+				this.serviceType = "Engineer";
+				this.serviceAction = "buyrepair";
+				this.serviceLevel = (Number(this.itemData.shop_level) - 5).toString();
+			}
+			else if (this.itemData.needdoctor == "1") {
+				this.serviceType = "Doctor";
+				this.serviceAction = "buyadminister";
+				this.serviceLevel = (Number(this.itemData.level) - 5).toString();
+			}
+			else if (this.itemData.needcook == "1" && !this.cooked) {
+				this.serviceType = "Chef";
+				this.serviceAction = "buycook";
+				this.serviceLevel = (Number(this.itemData.level) - 5).toString();
+			}
+			else {
+				return;
+			}
+		}
+
+		async setServiceData() {
+			const { userVars, webCall } = window;
+			this.serviceWaiting = true;
+
+			const callData = {
+				pagetime: userVars.pagetime,
+				tradezone: userVars.DFSTATS_df_tradezone,
+				searchname: this.serviceLevel,
+				memID: "",
+				profession: this.serviceType,
+				category: "",
+				search: "services",
+				searchtype: "buyinglist"
+			};
+
+			const rawServiceData = await new Promise((resolve) => webCall("trade_search", callData, resolve, true));
+			const parsedServiceData = Item.parseFlashReturn(rawServiceData);
+			const filteredServiceData = Object.entries(parsedServiceData).filter(([key, value]) => value.level == this.serviceLevel);
+			this.serviceData = filteredServiceData;
+			this.serviceWaiting = false;
+		}
+
 		_setMarketName() {
 			this.marketName = this.name.length >= Item.MAX_MARKET_NAME ? this.name.substr(0, Item.MAX_MARKET_NAME) : this.name;
 		}
 
 		// Fetches and parses market data
 		async setMarketData() {
+			const { userVars, webCall } = window;
 			this.marketWaiting = true;
 
 			const callData = {
-				pagetime: window.userVars.pagetime,
-				tradezone: window.userVars.DFSTATS_df_tradezone,
+				pagetime: userVars.pagetime,
+				tradezone: userVars.DFSTATS_df_tradezone,
 				searchname: this.marketName,
 				memID: "",
 				profession: "",
@@ -170,7 +227,7 @@
 				searchtype: "buyinglistitemname"
 			};
 
-			const rawMarketData = await new Promise((resolve) => window.webCall("trade_search", callData, resolve, true));
+			const rawMarketData = await new Promise((resolve) => webCall("trade_search", callData, resolve, true));
 			const parsedMarketData = Item.parseFlashReturn(rawMarketData);
 			const filteredMarketData = Object.entries(parsedMarketData).filter(([key, value]) => value.itemname == this.name);
 			this.marketData = Object.fromEntries(filteredMarketData);

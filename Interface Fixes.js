@@ -12,12 +12,13 @@
 (function() {
 	"use strict";
 
-	const { DOMEditor } = window.ssorpg1;
+	const { ssorpg1, inventoryHolder, infoBox, marketScreen } = window;
+	const { DOMEditor } = ssorpg1;
 
 	// Hides the tooltip when not hovering over an item
-	if (window.inventoryHolder) {
-		window.inventoryHolder.addEventListener("mouseout", () => window.infoBox.style.visibility = "hidden");
-		window.inventoryHolder.style.overflow = "visible";
+	if (inventoryHolder) {
+		inventoryHolder.addEventListener("mouseout", () => infoBox.style.visibility = "hidden");
+		inventoryHolder.style.overflow = "visible";
 	}
 
 	// Allows the infoBox to flow outside the main game window
@@ -36,13 +37,13 @@
 	}
 
 	// Unlocks the page after exiting a context menu in the marketplace
-	if (window.marketScreen) {
+	if (marketScreen) {
 		const { ctxMenuHolder } = window;
 
 		let contextMenuOpened = false;
 
 		const newEventListenerParams = {
-			element: window.inventoryHolder,
+			element: inventoryHolder,
 			event: "contextmenu",
 			functionName: "openSellContextMenu",
 			functionBefore: null,

@@ -4,17 +4,22 @@
 // @version		1.0
 // @description	Provides a right-click context menu to automatically search for service professionals
 // @author		ssorpg1
-// @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/Item.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/DOMEditor.js
-// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/main/libraries/WebcallScheduler.js
+// @match		https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=*
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Upgraded-Service-Context-Menu/libraries/Item.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Upgraded-Service-Context-Menu/libraries/DOMEditor.js
+// @require		https://raw.githubusercontent.com/ssorpg/DF-Tampermonkey/Upgraded-Service-Context-Menu/libraries/WebcallScheduler.js
 // @namespace	https://greasyfork.org/users/279200
 // ==/UserScript==
 
 (function() {
 	"use strict";
 
-	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	if (!window.inventoryHolder) {
+		return;
+	}
+
+	const { ssorpg1, marketScreen, inventoryHolder, populateInventory, updateAllFields, userVars, updateIntoArr, flshToArr, populateCharacterInventory } = window;
+	const { Item, DOMEditor, WebcallScheduler } = ssorpg1;
 
 	let contextMenu = null;
 	let mouseIsOverContextMenu = false;
@@ -32,7 +37,7 @@
 		e.preventDefault();
 		const itemElement = e.currentTarget.firstChild;
 
-		if (window.marketScreen != "buy" || !itemElement) {
+		if (marketScreen != "buy" || !itemElement) {
 			return;
 		}
 
@@ -41,24 +46,16 @@
 		}
 
 		const item = new Item(itemElement);
-		let catname = null;
-		let cat = null;
-		let level = null;
+		let textContent = null;
 
-		if (item.category == "armour") {
-			catname = "Engineer";
-			cat = "Services - Repair";
-			level = item.itemData.shop_level;
+		if (item.serviceType == "Engineer") {
+			textContent = "Repair with engineer";
 		}
-		else if (item.itemData.needdoctor == "1") {
-			catname = "Doctor";
-			cat = "Services - Medical";
-			level = item.itemData.level;
+		else if (item.serviceType == "Doctor") {
+			textContent = "Administer with doctor";
 		}
-		else if (item.itemData.needcook == "1") {
-			catname = "Chef";
-			cat = "Services - Cooking";
-			level = item.itemData.level;
+		else if (item.serviceType == "Chef") {
+			textContent = "Cook with chef";
 		}
 		else {
 			return;
@@ -72,7 +69,7 @@
 		contextMenu.style.zIndex = "20";
 		contextMenu.style.textAlign = "left";
 		contextMenu.style.position = "absolute";
-		contextMenu.style.width = "140px";
+		contextMenu.style.width = "240px";
 		mouseIsOverContextMenu = false;
 		contextMenu.addEventListener("mouseenter", () => mouseIsOverContextMenu = true);
 		contextMenu.addEventListener("mouseleave", () => mouseIsOverContextMenu = false);
@@ -82,38 +79,86 @@
 		title.textContent = item.name;
 
 		const button = document.createElement("button");
-		button.textContent = "Find " + catname;
+		button.textContent = textContent;
 		button.style.width = "100%";
-		button.dataset.level = (Number(level) - 5).toString();
-		button.dataset.catname = catname;
-		button.dataset.cat = cat;
-		button.addEventListener("mousedown", () => findService(button));
+		button.addEventListener("mousedown", () => WebcallScheduler.enqueue(() => findService(item)));
 
 		contextMenu.appendChild(title);
 		contextMenu.appendChild(button);
-		window.inventoryHolder.appendChild(contextMenu);
+		inventoryHolder.appendChild(contextMenu);
 		DOMEditor.contextMenuCorrection(contextMenu);
 		contextMenu.style.visibility = "visible";
 	}
 
-	function findService(button) {
-		const {
-			searchField,
-			categoryChoice,
-			cat,
-			makeSearch
-		} = DOMEditor.getTradeSearchElements();
-
-		searchField.value = button.dataset.level;
-		categoryChoice.dataset.catname = button.dataset.catname;
-		categoryChoice.dataset.cattype = "service";
-		cat.textContent = button.dataset.cat;
-		makeSearch.disabled = false;
-
+	async function findService(item) {
 		contextMenu.remove();
-		WebcallScheduler.enqueue(async () => {
-			window.search();
-			return true;
-		});
+		await item.setServiceData();
+		await useService(item);
+		populateInventory();
+		updateAllFields();
+		return true;
 	}
+
+	async function useService(item) {
+		const selectedService = item.serviceData[0];
+
+		if (!selectedService) {
+			return;
+		}
+
+		const callData = {
+			pagetime: userVars.pagetime,
+			templateID: userVars.template_ID,
+			sc: userVars.sc,
+			creditsnum: 0,
+			buynum: selectedService.id_member,
+			renameto: "undefined`undefined",
+			expected_itemprice: selectedService.price,
+			expected_itemtype: "",
+			expected_itemtype2: "",
+			itemnum: item.itemElement.dataset.slot,
+			itemnum2: "0",
+			price: item.scrapValue,
+			action: item.serviceAction,
+			gv: "42",
+			userID: userVars.userID,
+			password: userVars.password
+		};
+
+		const response = await new Promise((resolve) => webCall("inventory_new", callData, resolve, true));
+		updateIntoArr(flshToArr(response, "DFSTATS_"), userVars);
+		populateCharacterInventory();
+	}
+
+	// Use directly
+	// var dataArr = {};
+	// dataArr["pagetime"] = userVars["pagetime"];
+	// dataArr["templateID"] = userVars["template_ID"];
+	// dataArr["sc"] = userVars["sc"];
+	// dataArr["creditsnum"] = 0;
+	// dataArr["buynum"] = 0;
+	// dataArr["renameto"] = "undefined`undefined";
+	// dataArr["expected_itemprice"] = "-1";
+	// dataArr["expected_itemtype2"] = "";
+	// dataArr["expected_itemtype"] = currentItem.dataset.type;
+	// dataArr["itemnum2"] = "0";
+	// dataArr["itemnum"] = currentItem.parentNode.dataset.slot;
+	// dataArr["price"] = 0;
+	// dataArr["gv"] = 42;
+
+	// dataArr["action"] = "newuse";		// medicine
+	// dataArr["action"] = "newconsume";	// food
+
+	// webCall("inventory_new", dataArr, function(webData)
+	// {
+	// 	if(doPageRefresh)
+	// 	{
+	// 		location.reload(true);
+	// 		return;
+	// 	}
+	// 	updateIntoArr(flshToArr(webData, "DFSTATS_"), userVars);
+	// 	populateInventory();
+	// 	populateCharacterInventory();
+	// 	updateAllFields();
+	// }, true);
 })();

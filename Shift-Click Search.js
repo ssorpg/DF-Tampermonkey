@@ -14,10 +14,11 @@
 (function() {
 	"use strict";
 
-	const { Item, DOMEditor, WebcallScheduler } = window.ssorpg1;
+	const { ssorpg1, marketScreen, search } = window;
+	const { Item, DOMEditor, WebcallScheduler } = ssorpg1;
 
 	DOMEditor.getInventoryCells().forEach((cell) => cell.addEventListener("mousedown", (e) => {
-		if (window.marketScreen != "buy" || !e.shiftKey) {
+		if (marketScreen != "buy" || !e.shiftKey) {
 			return;
 		}
 
@@ -27,7 +28,7 @@
 	}));
 
 	async function tradeSearch(itemElement) {
-		if (window.marketScreen != "buy" || !itemElement) {
+		if (marketScreen != "buy" || !itemElement) {
 			return;
 		}
 
@@ -45,7 +46,7 @@
 		cat.textContent = "Everything";
 		makeSearch.disabled = false;
 
-		window.search();
+		search();
 		return true;
 	}
 })();
