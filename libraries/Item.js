@@ -102,7 +102,7 @@
 		}
 
 		_setCooked() {
-			this.cooked = this.itemElement.dataset.type.includes("_cooked");
+			this.cooked = this.itemElement ? this.itemElement.dataset.type.includes("_cooked") : false;
 		}
 
 		// Seperates clothing colors from item display name
