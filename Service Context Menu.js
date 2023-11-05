@@ -116,7 +116,7 @@
 			expected_itemprice: selectedService.price,
 			expected_itemtype: "",
 			expected_itemtype2: "",
-			itemnum: item.itemElement.dataset.slot,
+			itemnum: item.itemElement.parent.dataset.slot,
 			itemnum2: "0",
 			price: item.scrapValue,
 			action: item.serviceAction,

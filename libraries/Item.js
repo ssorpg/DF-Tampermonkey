@@ -203,6 +203,7 @@
 			const rawServiceData = await new Promise((resolve) => webCall("trade_search", callData, resolve, true));
 			const parsedServiceData = Item.parseFlashReturn(rawServiceData);
 			const filteredServiceData = Object.entries(parsedServiceData).filter(([key, value]) => value.level == this.serviceLevel);
+			filteredServiceData.forEach((value, i) => value[0] = i);
 			this.serviceData = Object.fromEntries(filteredServiceData);
 			this.serviceWaiting = false;
 		}
@@ -230,6 +231,7 @@
 			const rawMarketData = await new Promise((resolve) => webCall("trade_search", callData, resolve, true));
 			const parsedMarketData = Item.parseFlashReturn(rawMarketData);
 			const filteredMarketData = Object.entries(parsedMarketData).filter(([key, value]) => value.itemname == this.name);
+			filteredMarketData.forEach((value, i) => value[0] = i);
 			this.marketData = Object.fromEntries(filteredMarketData);
 			this.marketWaiting = false;
 			this.marketPriceExpiration = Date.now() + Item.EXPIRATION_TIME;
