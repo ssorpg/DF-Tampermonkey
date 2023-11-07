@@ -61,7 +61,7 @@
 		const itemElement = curInfoItem;
 
 		// Copied from `inventory.js`
-		if (!itemElement || !(itemElement.classList.contains("fakeItem") && itemElement.parentNode.id == "recipes")) {
+		if (!itemElement || !(itemElement.classList.contains("fakeItem") && itemElement.parentElement.id == "recipes")) {
 			return;
 		}
 

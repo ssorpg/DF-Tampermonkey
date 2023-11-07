@@ -46,16 +46,19 @@
 		}
 
 		const item = new Item(itemElement);
-		let textContent = null;
+		let serviceText = null;
+		let useText = null;
 
 		if (item.serviceType == "Engineer") {
-			textContent = "Repair with engineer";
+			serviceText = "Repair with engineer";
 		}
 		else if (item.serviceType == "Doctor") {
-			textContent = "Administer with doctor";
+			serviceText = "Administer with doctor";
+			useText = "Use";
 		}
 		else if (item.serviceType == "Chef") {
-			textContent = "Cook with chef";
+			serviceText = "Cook with chef";
+			useText = "Eat";
 		}
 		else {
 			return;
@@ -69,7 +72,7 @@
 		contextMenu.style.zIndex = "20";
 		contextMenu.style.textAlign = "left";
 		contextMenu.style.position = "absolute";
-		contextMenu.style.width = "240px";
+		contextMenu.style.width = "200px";
 		mouseIsOverContextMenu = false;
 		contextMenu.addEventListener("mouseenter", () => mouseIsOverContextMenu = true);
 		contextMenu.addEventListener("mouseleave", () => mouseIsOverContextMenu = false);
@@ -78,13 +81,21 @@
 		title.style.textAlign = "center";
 		title.textContent = item.name;
 
-		const button = document.createElement("button");
-		button.textContent = textContent;
-		button.style.width = "100%";
-		button.addEventListener("mousedown", () => WebcallScheduler.enqueue(() => findService(item)));
+		const serviceButton = document.createElement("button");
+		serviceButton.textContent = serviceText;
+		serviceButton.style.width = "100%";
+		serviceButton.addEventListener("mousedown", () => WebcallScheduler.enqueue(() => findService(item)));
 
 		contextMenu.appendChild(title);
-		contextMenu.appendChild(button);
+		contextMenu.appendChild(serviceButton);
+
+		if (useText) {
+			const useButton = document.createElement("button");
+			useButton.textContent = useText;
+			useButton.style.width = "100%";
+			useButton.addEventListener("mousedown", () => WebcallScheduler.enqueue(() => useItem(item)));
+		}
+
 		inventoryHolder.appendChild(contextMenu);
 		DOMEditor.contextMenuCorrection(contextMenu);
 		contextMenu.style.visibility = "visible";
@@ -116,7 +127,7 @@
 			expected_itemprice: selectedService.price,
 			expected_itemtype: "",
 			expected_itemtype2: "",
-			itemnum: item.itemElement.parent.dataset.slot,
+			itemnum: item.itemElement.parentElement.dataset.slot,
 			itemnum2: "0",
 			price: item.scrapValue,
 			action: item.serviceAction,
@@ -128,6 +139,10 @@
 		const response = await new Promise((resolve) => webCall("inventory_new", callData, resolve, true));
 		updateIntoArr(flshToArr(response, "DFSTATS_"), userVars);
 		populateCharacterInventory();
+	}
+
+	async function useItem(item) {
+		
 	}
 
 	// Use directly

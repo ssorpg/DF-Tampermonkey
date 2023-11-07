@@ -53,7 +53,7 @@
 		DOMEditor.replaceEventListener(newEventListenerParams);
 
 		document.addEventListener("mousedown", (e) => {
-			if (contextMenuOpened && e.target !== ctxMenuHolder && e.target.parentNode !== ctxMenuHolder) {
+			if (contextMenuOpened && e.target !== ctxMenuHolder && e.target.parentElement !== ctxMenuHolder) {
 				window.pageLock = false;
 				contextMenuOpened = false;
 			}

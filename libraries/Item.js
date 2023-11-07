@@ -180,9 +180,6 @@
 				this.serviceAction = "buycook";
 				this.serviceLevel = (Number(this.itemData.level) - 5).toString();
 			}
-			else {
-				return;
-			}
 		}
 
 		async setServiceData() {
