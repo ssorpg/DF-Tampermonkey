@@ -6,15 +6,15 @@ export default merge(base, {
     mode: 'development',
     cache: {
         type: 'filesystem',
-        name: 'dev',
+        name: 'dev'
     },
     output: {
         path: path.resolve(".", "userscripts"),
-        filename: "index.dev.user.js",
+        filename: "[name].js"
     },
     devtool: 'eval-source-map',
     watch: true,
     watchOptions: {
-        ignored: /node_modules/,
-    },
+        ignored: /node_modules/
+    }
 });

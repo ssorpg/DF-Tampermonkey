@@ -7,8 +7,6 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
-    "use strict";
+"use strict";
 
-    scroll(0, 180);
-})();
+scroll(0, 180);

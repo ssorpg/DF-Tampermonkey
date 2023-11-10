@@ -6,13 +6,13 @@ export default merge(base, {
     mode: 'production',
     cache: {
         type: 'filesystem',
-        name: 'prod',
+        name: 'prod'
     },
     output: {
         path: path.resolve(".", "userscripts"),
-        filename: "index.prod.user.js",
+        filename: "[name].js"
     },
     watchOptions: {
-        ignored: /node_modules/,
-    },
+        ignored: /node_modules/
+    }
 });

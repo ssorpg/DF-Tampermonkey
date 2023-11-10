@@ -1,8 +1,7 @@
 {
-  "name": "item-test",
-  "version": "1.0",
-  "description": "This is a test script.",
-  "main": "userscript/item_test.user.js",
+  "name": "df-tampermonkey",
+  "version": "2.0",
+  "description": "Compiles Tampermonkey scripts for Dead Frontier.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack/prod.ts",
@@ -16,9 +15,6 @@
   "keywords": [],
   "author": "ssorpg1",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pboymt/userscript-typescript-template/issues"
-  },
   "homepage": "",
   "devDependencies": {
     "@types/node": "^18.15.11",
@@ -33,21 +29,5 @@
     "webpack": "^5.64.3",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^5.8.0"
-  },
-  "userscript": {
-    "require-template": "https://cdn.jsdelivr.net/npm/${dependencyName}@${dependencyVersion}",
-    "namespace": "http://tampermonkey.net/",
-    "license": "https://opensource.org/licenses/MIT",
-    "match": [
-      "https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=35"
-    ],
-    "connect": [],
-    "require": [],
-    "grant": [
-      "none"
-    ],
-    "exclude": [],
-    "resources": [],
-    "keyedResources": {}
   }
 }

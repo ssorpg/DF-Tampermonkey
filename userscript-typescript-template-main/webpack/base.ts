@@ -3,23 +3,25 @@ import { Configuration, BannerPlugin } from "webpack";
 import { generateHeader } from "../plugins/userscript.plugin";
 
 const config: Configuration = {
-    entry: "./src/index.ts",
+    // Add an entry here to compile it as a js file
+    entry: {
+        "Auto-Scroll": "./src/Auto-Scroll.ts",
+        "Faster Page Change": "./src/Faster Page Change.ts",
+        "Interface Fixes": "./src/Interface Fixes.ts",
+        "Service Context Menu": "./src/Service Context Menu.ts"
+    },
     target: "web",
     resolve: {
-        extensions: [".ts", ".js"],
+        extensions: [".ts", ".js"]
     },
     module: {
         rules: [
             {
                 test: /\.m?ts$/,
                 use: "ts-loader",
-                exclude: /node_modules/,
-            },
-        ],
-    },
-    externals: {
-        axios: "axios",
-        "@trim21/gm-fetch": "GM_fetch",
+                exclude: /node_modules/
+            }
+        ]
     },
     optimization: {
         minimize: false,
@@ -27,18 +29,18 @@ const config: Configuration = {
             // minify: TerserPlugin.swcMinify,
             terserOptions: {
                 format: {
-                    comments: false,
+                    comments: false
                 },
                 compress: false,
-                mangle: false,
+                mangle: false
             },
-            extractComments: false,
-        })],
+            extractComments: false
+        })]
     },
     plugins: [
         new BannerPlugin({
             banner: generateHeader,
-            raw: true,
+            raw: true
         })
     ]
 };
